@@ -6,7 +6,7 @@ module Uploadable
     
     attr_accessor :index, :name, :ext_field, :required, :parent, :thumb
     
-    def initialize(args = {})
+    def initialize(args={})
       args.each do |name, value|
         send("#{name}=", value)
       end
@@ -174,10 +174,14 @@ module Uploadable
     before_destroy :destroy_files
   end
   
-  def initialize(attributes = {})
+=begin FIXME not needed
+  def initialize(args = {})
+    p 'Uploadable init'
     self.set_upload_fields
+    p 'Uploadable super'
     super
   end
+=end
   
   def reset_uploads
     @file_name = nil

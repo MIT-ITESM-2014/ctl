@@ -1,0 +1,189 @@
+(function(){
+  $(function(){
+    var el = app.km.header.select = {};
+	  $.extend(el, {
+	    parent: app.km.header,
+	    root: null,
+	    container: null,
+	    filters: [],
+	    view: null,
+	    lang: null,
+	    config: null,
+	    data: {},
+	    dialog: null,
+	    submit_btn: null,
+	    init: function(){
+	      this.initRoot();
+	      this.initView();
+	      this.initDialog();
+	      this.initLang();
+	      this.initConfig();
+	      this.initContainer();
+	      this.initAddBtn();
+	      this.initData();
+	      this.initInstance();
+	    },
+	    initRoot: function(){
+	      this.root = this.parent.root;
+	    },
+	    initLang: function(){
+	      this.lang = this.view.lang.filters;
+	    },
+	    initConfig: function(){
+	      this.config = this.view.config;
+	    },
+	    initDialog: function(){
+	      this.dialog = this.parent.right_container.dialog;
+	    },
+	    initContainer: function(){
+	      this.container = $('#select_dialog');
+	    },
+	    initView: function(){
+	      this.view = this.parent;
+	    },
+	    initData: function(){
+	      this.data = this.container.attr('data-location');
+	      this.addFilters({ data: this.data });
+	    },
+	    initInstance: function(){
+	      this.parent.right_container.dialog_select = this;
+	    },
+	    addBtnOnClick: function(e, container){
+	      if(this.filters.length < 4){
+          this.addFilters();
+	      }
+	    },
+      initAddBtn: function(){
+        var _self = this;
+        this.add_btn = $('<a href="#" class="add_select_filter_btn button">ADD</a>');
+        this.add_btn.appendTo(this.container);
+        this.root.click(this.add_btn, function(e, container){
+          _self.addBtnOnClick(e, container);
+        });
+      },
+	    addFilters: function(opts){
+	      var el = {};
+	      $.extend(el, {
+	        parent: this,
+	        root: null,
+	        data: {
+	          country_id: null,
+	          city_id: null,
+	          km_id: null
+	        },
+	        km: null,
+	        container: null,
+	        labels: [],
+	        icons: [],
+	        add_btn: null,
+	        filters: {
+	          country: null,
+	          city: null,
+	          km2: null
+	        },
+	        init: function(){
+	          this.initRoot();
+	          this.initLabels();
+	          this.initIcons();
+	          this.initContainer();
+	          this.initDropdowns();
+	          var clear = $('<div class="clear"></div>');
+	          clear.appendTo(this.container);
+	        },
+	        initRoot: function(){
+	          this.root = this.parent.root;
+	        },
+	        initLabels: function(){
+	          this.labels = this.parent.lang.labels;
+	        },
+	        initIcons: function(){
+	          this.icons = this.parent.config.icons;
+	        },
+	        initContainer: function(){
+	          this.container = $('<div class="select_filters"></div>');
+	          this.container.appendTo(this.parent.container);
+	        },
+	        initDropdowns: function(){
+	          this.initCountryDropdown();
+	          this.initCityDropdown();
+	          this.initKm2Dropdown();
+	        },
+	        initCountryDropdown: function(){
+	          var _self = this;
+	          this.filters.country = this.getDropdown('country', {
+	            key: 'list_countries',
+	            selected_key: this.data.country_id,
+	            change: function(which){
+	              _self.countryDropdownOnChange(which);
+	            }
+	          });
+	        },
+	        countryDropdownOnChange: function(which){
+	          this.filters.city.clear();
+	          this.filters.km2.clear(false);
+	          this.km = null;
+						$.extend(this.filters.city.data, {
+							country_id: which.data.id
+						});
+	        },
+					initCityDropdown: function(){
+						var _self = this;
+						this.filters.city = this.getDropdown('city', {
+							key: 'list_cities',
+							selected_key: this.data.city_id,
+							data: {
+								country_id: this.data.country_id
+							},
+							change: function(which){
+								_self.cityDropdownOnChange(which);
+							}
+						});
+					},
+					cityDropdownOnChange: function(which){
+					  this.km = null;
+						this.filters.km2.clear();
+						$.extend(this.filters.km2.data, {
+							city_id: which.data.id
+						});
+					},
+					initKm2Dropdown: function(){
+						var _self = this;
+						this.filters.km2 = this.getDropdown('km2', {
+							key: 'list_kms',
+							selected_key: this.data.km_id,
+							data: {
+								city_id: this.data.city_id
+							},
+							change: function(which){
+								_self.km2DropdownOnChange(which);
+							}
+						});
+					},
+					km2DropdownOnChange: function(which){
+						if(which != null) this.km = which.data;
+					},
+          getDropdown: function(key, opts){
+	          var view = this.parent.view;
+	          var label = this.parent.lang.labels[key];
+	          var icon = this.parent.config.icons[key];
+	          var container = this.container;
+	          return this.root.fmx.dropdown(
+		          $.extend(opts, {
+			          api_client: this.root.api_client,
+			          icon: icon,
+			          label: label,
+			          parent_container: container,
+			          getKey: function(key, el){
+				          return el.id;				
+			          }
+		          })
+	          );
+          }
+	      }, opts);
+	      el.init();
+	      this.filters.push(el);
+	    }
+	  });
+	  el.init();
+  });
+})(jQuery);

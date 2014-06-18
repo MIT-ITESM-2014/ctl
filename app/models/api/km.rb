@@ -70,6 +70,10 @@ class Api::Km < Km
     }.call
   end
   
+  def api_heat_shops
+    @api_heat_shops ||= Api::Shop.heat_data(self.id)
+  end
+  
   def api_chart_streets
     @api_chart_streets ||= Api::Street.api_chart_base.filter_by_km(self.id)
   end

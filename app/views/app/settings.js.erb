@@ -65,7 +65,8 @@ $.extend(config, {
 		paths: {
 			home: '<%= url_for controller: :home, action: :index %>',
 			km: '<%= url_for controller: :kms, action: :index %>',
-			show: '<%= url_for controller: :kms, action: :show, country: '%{country}', city: '%{city}', km: '%{km}', only_path: false %>'
+			show: '<%= url_for controller: :kms, action: :show, country: '%{country}', city: '%{city}', km: '%{km}', only_path: false %>',
+		  compare: '<%= compare_path %>'
 		}
 	},
 	ui: {
@@ -89,6 +90,24 @@ $.extend(config, {
 		}
 	},
 	views: {
+	  compare: {
+			map: {
+				map: {
+					lat: 42.35704390000001,
+					lng: -71.09286029999998,
+					opts: {
+						zoom: 16,
+						scrollwheel: false,
+						mapTypeControl: false
+					}
+				},
+				layers: {
+				  heat: {
+				    url: '<%= url_for controller: 'api/shops', action: :heat %>'   
+				  }
+				}
+			}
+	  },
 		km: {
 			share: {
 				embed: {
@@ -382,6 +401,20 @@ $.extend(config, {
 	},
 	fmx: {
 		parent: null,
+		dialog: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.dialog());
+			return opts;
+		},
+		dialog_action: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.dialog_action());
+			return opts;
+		},
 		notification: function(){
 			var opts = {};
 			$.extend(opts, {

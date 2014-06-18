@@ -36,3 +36,14 @@
 		@content;
 	}
 }
+
+/** backgrounds */
+@mixin bg-color($color){
+	background: none repeat scroll 0 0 $color;
+}
+
+@mixin img-link{
+	border: 0 none;
+	outline: none;
+	text-decoration: none;
+}

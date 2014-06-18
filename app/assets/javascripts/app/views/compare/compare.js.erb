@@ -1,0 +1,88 @@
+(function(){
+  $(function(){
+    app.compare = {};
+    $.extend(app.compare, {
+      parent: app, 
+      root: null,
+      view: null,
+      container: null,
+      lang: null,
+      config: null,
+      is_ready: 0,
+      req: null,
+      kms: [],
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initContainer();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this;
+      },
+      initConfig: function(){
+        this.config = config.views.compare;
+      },
+      initLang: function(){
+        this.lang = lang.views.compare;
+      },
+      initContainer: function(){
+        this.container = this.root.wrapper.find('#compare');
+      },
+      setInterface: function(){
+        //if(this.kms.length == 2){ // TODO constants
+          //this.setSplitScreen();
+        //}else{
+          this.setFourScreen();
+        //}
+      },
+      setSplitScreen: function(){
+        var maps = this.container.find('.compare_map');
+        maps.addClass('split_two');
+        var map0 = $(maps[0]);
+        var map1 = $(maps[1]);
+        var width = map0.width();
+        map0.css({ left: 0 });
+        map1.css({ left: width });
+      },
+      setFourScreen: function(){
+        console.log('set four screen');
+        var maps = this.container.find('.compare_map');
+        if(maps.length == 4){
+          maps.addClass('split_four');
+          var map0 = $(maps[0]);
+          var map1 = $(maps[1]);
+          var map2 = $(maps[2]);
+          var map3 = $(maps[3]);
+          var width = map0.width();
+          var height = map0.height();
+          map0.css({left: 0, top: 0});
+          map1.css({left: width, top: 0});
+          map2.css({left: 0, top: height});
+          map3.css({left: width, top: height});
+        }
+      },
+      abort: function(){
+        if(this.req != null) this.req.abort();
+      },
+      ready: function(){
+        this.setInterface();
+      },
+      loadKms: function(){
+        var _self = this;
+        var length = this.kms.length;
+        // TODO setInterface
+        for(var i = 0; i < length; ++i){
+          var km =  this.kms[i];
+          this.loadKm(km);
+        }
+      },
+      loadKm: function(which){}
+    });
+    app.compare.init();
+  });
+})(jQuery);

@@ -442,3 +442,12 @@
 		}
 	}
 }
+.select_filters{
+  width: 315px;
+  margin: 20px auto 100px auto;
+  @include link('a.add_select_filter_btn'){
+	  float: left;
+	  font-size: 11px;
+	  padding: 8px 16px 8px 16px;
+  }
+}

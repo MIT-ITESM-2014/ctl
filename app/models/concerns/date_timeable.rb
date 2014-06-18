@@ -42,11 +42,11 @@ module DateTimeable
         date_time = "#{self.date} #{self.time} +00:00"
         begin
           self.parent.send("#{self.name}=", Time.parse(date_time))
-        rescue
+        rescue Exception => e
           puts "--------------------"
           puts "--------------------"
           puts "--------------------"
-          puts date_time
+          puts "#{date_time} except: #{e.to_s}"
           puts "--------------------"
           puts "--------------------"
           puts "--------------------"

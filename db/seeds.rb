@@ -7,6 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # admin users
+p 'Admin Users...'
 u = User.new name: 'Gustavo', last_names: 'Beauregard', mail: 'gbn@mit.edu'
 u.list_perms = u.add_perms = u.edit_perms = u.delete_perms = User.all_perms
 u.set_password "123456", "123456"
@@ -29,6 +30,7 @@ def save_user(user)
 end
 
 # users
+p 'Users...'
 u = User.new(name: 'Angela', last_names: 'Wang', mail: 'yinjwang@mit.edu')
 save_user(u)
 u = User.new(name: 'Alexander', last_names: 'Oliva', mail: 'alex93@mit.edu')
@@ -51,12 +53,14 @@ u = User.new(name: 'Lesley', last_names: 'Wang', mail: 'leswang@mit.edu')
 save_user(u)
 
 # upload configs
+p 'UploadConfig'
 uc = UploadConfig.new max_size: 307200, allowed_extensions: 'jpg,png'
 uc.identity = Admin::UploadConfig::Identity::CountryImage
 uc.save
 
-
+=begin
 # countries
+p 'Countries...'
 Country.create(name: 'Afghanistan')
 Country.create(name: 'Albania')
 Country.create(name: 'Algeria')
@@ -267,11 +271,13 @@ def save_city(city, country_name)
     puts "country not found: #{country}"
   else
     city.country_id = country.id
+    city.city_time_zone = city.name
     city.save
   end
 end
 
 # cities
+p 'Cities...'
 c = City.new(name: 'Mexico City', lat: 19.432608, lng: -99.133208)
 save_city(c, 'Mexico')
 c = City.new(name: 'Madrid', lat: 40.416775, lng: -3.70379)
@@ -286,9 +292,12 @@ c = City.new(name: 'Santiago', lat: -33.4691199, lng: -70.641997)
 save_city(c, 'Chile')
 c = City.new(name: 'Rio de Janeiro', lat: -22.9035393, lng: -43.20958689999998)
 save_city(c, 'Brazil')
-
+# -- New Backup
+c = City.new(name: 'Rio de Janiero', lat: -22.9035393, lng: -43.20958689999998)
+save_city(c, 'Brazil')
 
 # languages
+p 'Languages...'
 Language.create(name: 'Arabic')
 Language.create(name: 'Awadhi')
 Language.create(name: 'Azerbaijani')
@@ -337,3 +346,4 @@ Language.create(name: 'Ukrarian')
 Language.create(name: 'Urdu')
 Language.create(name: 'Vientamese')
 Language.create(name: 'Yoruba')
+=end

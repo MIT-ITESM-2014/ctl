@@ -2,6 +2,9 @@
 //= require highcharts-3.0.2.min
 //= require highcharts-map
 //= require highcharts-heatmap
+//= require fmx/overlay
+//= require fmx/dialog/dialog
+//= require fmx/dialog/action
 //= require app/views/km/km
 //= require app/views/km/elements/elements
 //= require app/views/km/elements/shops

@@ -65,6 +65,10 @@ en:
           search:
             labels:
               search: 'search city...'
+          compare:
+            labels:
+              title: 'Compare'
+              button: 'Compare'
           filters:
             labels:
               country: 'Country'

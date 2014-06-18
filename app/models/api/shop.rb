@@ -6,6 +6,10 @@ class Api::Shop < Shop
       only: [:name, :has_loading_area, :deliveries_count, :lat, :lng],
       methods: [:f_length]
     }
+    Heat = {
+      only: [:lat, :lng],
+      methods: [:f_length]
+    }
   end
   
   scope :api_chart_base, ->{ select('shops.id, shops.name').with_deliveries.ascending }
@@ -13,6 +17,10 @@ class Api::Shop < Shop
   
   def self.map_data(km_id, shop_type)
     self.api_map_base.filter_by_km(km_id).filter_by_type(shop_type)
+  end
+  
+  def self.heat_data(km_id)
+    self.api_map_base.filter_by_km(km_id)
   end
   
   def self.json_display

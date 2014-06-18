@@ -1,0 +1,207 @@
+(function(){
+  $(function(){
+    app.compare.maps = {};
+    $.extend(app.compare.maps, {
+      parent: app.compare,
+      root: null,
+      view: null,
+      maps: [],
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initGoogleMaps();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent;
+      },
+      initGoogleMaps: function(){
+        var _self = this;
+        this.root.google_maps_loader.load(function(){
+          _self.googleMapsOnLoad();
+        });
+      },
+      googleMapsOnLoad: function(){
+        this.initMaps();
+        this.view.ready();
+      },
+      initMaps: function(){
+        var kms = this.view.container.find('.compare_map');
+        var length = kms.length;
+        for(var i = 0; i < length; ++i){
+          var container = $(kms[i]);
+          var km = container.attr('data-km');
+          km = JSON.parse(km);
+          this.addMap({ container: container,  km: km });
+        }
+      },
+      addMap: function(opts){
+        var el = {};
+        $.extend(el, {
+          parent: this,
+          root: null,
+          view: null,
+          map: null,
+          km: null,
+          style: null,
+          styles: null,
+          center: null,
+          container: null,
+          config: null,
+          init: function(){
+            this.initRoot();
+            this.initView();
+            this.initConfig();
+            this.initStyles();
+            this.initCenter();
+            this.initMap();
+            this.initStyle();
+            this.initLayers();
+          },
+          initRoot: function(){
+            this.root = this.parent.root;
+          },
+          initView: function(){
+            this.view = this.parent.view;
+          },
+          initConfig: function(){
+            this.config = this.view.config.map;
+          },
+          initStyles: function(){
+            this.styles = this.view.map_styles;
+            this.styles.initStyles();
+          },
+          initStyle: function(){
+            //this.styles.setMap(this.map);
+          },
+          initCenter: function(){
+            this.center = new google.maps.LatLng(this.km.lat, this.km.lng);
+          },
+          initMap: function(){
+            var container = this.container.get(0);
+            this.map = new google.maps.Map(container, 
+					    $.extend({
+						    center: this.center
+						    //mapTypeControlOptions: {
+							    //mapTypeIds: this.styles.key_list
+						    //}
+					    }, this.config.map.opts)
+            );
+				    /*var list = this.styles.list;
+				    var style = null;
+				    $.each(list, function(key, el){
+					    style = el;
+					    return false;
+				    });*/
+				    //if(style != null) this.setStyle(style);
+				    //this.map.panTo(this.center);          
+          },
+          setStyle: function(style){
+            this.style = style;
+            this.map.setMapTypeId(this.style.gm_key);
+          },
+          initLayers: function(){
+            this.initHeatLayer(); 
+          },
+          initHeatLayer: function(){
+            var el = {};
+            $.extend(el, {
+              parent: this,
+              root: null,
+              view: null,
+              req: null,
+              params: {
+                km_id: this.km.id
+              },
+              url: null,
+              layer: null,
+              init: function(){
+                this.initRoot();
+                this.initConfig();
+                this.initView();
+                this.initUrl();
+                this.initData();
+              },
+              initRoot: function(){
+                this.root = this.parent.root;
+              },
+              initConfig: function(){
+                this.config = this.parent.config.layers.heat;
+              },
+              initView: function(){
+                this.view = this.parent.view;
+              },
+              initUrl: function(){
+                this.url = this.config.url;
+              },
+              initData: function(){
+                this.req = $.ajax({
+                  url: this.url,
+                  type: 'POST',
+                  context: this,
+                  data: this.params,
+                  success: this.success,
+                  error: this.error
+                });
+              },
+              success: function(data){
+                this.data = data.contents;
+                this.render();
+              },
+              render: function(){
+                var points = this.arrayToPoint(this.data);
+                //var google_points = new google.maps.MVCArray(points);
+                this.layer = new google.maps.visualization.HeatmapLayer({
+                  data: points,
+                  dissipating: true
+                });
+                var gradient = [
+                  'rgba(0,255,255,0)',
+                  'rgba(0,255,255,1)',
+                  'rgba(0,191,255,1)',
+                  'rgba(0,127,255,1)',
+                  'rgba(0,63,255,1)',
+                  'rgba(0,0,255,1)',
+                  'rgba(0,0,255,1)',
+                  'rgba(0,0,223,1)',
+                  'rgba(0,0,191,1)',
+                  'rgba(0,0,159,1)',
+                  'rgba(0,0,127,1)',
+                  'rgba(63,0,91,1)',
+                  'rgba(127,0,63,1)',
+                  'rgba(191,0,31,1)',
+                  'rgba(255,0,0,1)'
+                ];
+                this.layer.set('gradient', gradient);
+                this.layer.set('radius', 75);
+                this.layer.set('opacity', null);
+                this.layer.setMap(this.parent.map);
+              },
+              arrayToPoint: function(data){
+                var result = [];
+                var length = data.length;
+                if(length > 0){
+                  for(var i = 0; i < length; ++i){
+                    var el = data[i];
+                    var point = { location: new google.maps.LatLng(el.lat, el.lng), weight: el.f_length };
+                    result.push(point);
+                  }
+                }
+                return result;
+              },
+              error: function(){
+                console.log('error'); // TODO errors and friends
+              }
+            });
+            el.init();
+          }
+        }, opts);
+        el.init();
+        this.maps.push(el);
+      }
+    });
+    app.compare.maps.init();
+  });
+})(jQuery);

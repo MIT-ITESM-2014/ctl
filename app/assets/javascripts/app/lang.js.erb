@@ -30,6 +30,15 @@ $.extend(lang, {
 				title: '<%= t 'app.views.about.map.map.title' %>'
 			}
 		},
+		compare: {
+			map: {
+				styles: {
+					_default: '<%= t 'app.views.km.map.styles._default' %>',
+					dark: '<%= t 'app.views.km.map.styles.dark' %>',
+					classic: '<%= t 'app.views.km.map.styles.classic' %>'
+				}
+			}
+		},
 		km: {
 			header: {
 				search: {
@@ -45,6 +54,11 @@ $.extend(lang, {
 						style: '<%= t 'app.views.km.header.filters.labels.style' %>',
 						share: '<%= t 'app.views.km.header.filters.labels.share' %>'
 					}
+				},
+				compare: {
+				  labels: {
+				    button: '<%= t 'app.views.km.header.compare.labels.button' %>'
+				  }
 				},
 				share: {
 					labels: {
@@ -152,6 +166,22 @@ $.extend(lang, {
 	},
 	fmx: {
 		parent: null,
+		dialog: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					close: '<%= t 'fmx.dialog.labels.close' %>'
+				}
+			});
+			return opts;
+		},
+		dialog_action: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
 		notification: function(){
 			var opts = {};
 			$.extend(opts, {

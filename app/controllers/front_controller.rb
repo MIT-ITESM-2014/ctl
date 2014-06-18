@@ -32,6 +32,5 @@ class FrontController < ApplicationController
   
   alias_method :base_title, :title
   alias_method :base_description, :description
-  
-  
+
 end

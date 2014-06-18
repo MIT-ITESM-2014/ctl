@@ -163,6 +163,8 @@
 					parent: this,
 					root: null,
 					view: null,
+					dialog: null,
+					dialog_select: null, // 2014
 					init: function(){
 						this.initRoot();
 						this.initView();
@@ -170,11 +172,112 @@
 					},
 					initContainer: function(){
 						this.container = $('<div id="header_right_container"></div>');
+						this.initCompareButton();
 						this.initSearchBar();
 						this.initFilters();
 						this.container.append('<div class="clear"></div>');
 						this.container.appendTo(this.parent.container);
 					},
+					initCompareButton: function(){ // 2014 start compare
+					  var compare_btn = {};
+					  $.extend(compare_btn,{
+					    parent: this,
+					    root: null,
+					    view: null,
+					    dialog: null,
+					    data: null,
+					    lang: null,
+					    init: function(){
+					      this.initRoot();
+					      this.initView();
+					      this.initLang();
+					      this.initContainer();
+					    },
+					    initRoot: function(){
+					      this.root = this.parent.root;
+					    },
+					    initView: function(){
+					      this.view = this.parent.view;
+					    },
+					    initLang: function(){
+					      this.lang = this.parent.parent.lang.compare;
+					    },
+					    initContainer: function(){
+					      var label = this.lang.labels.button;
+					      this.container = $('<a href="#" id="header_compare_btn" class="button">' + label + '</a>');
+					      this.initAction();
+					      this.container.appendTo(this.parent.container);
+					    },
+					    initAction: function(){
+					      var _self = this;
+					      this.root.click(this.container, function(e, container){
+					        _self.onClick(e, container);
+					      });
+					    },
+					    getKmValues: function(km){
+                var parts = km.full_slug.split('/');
+                var data = {};
+                if(parts.length == 3){
+                  data = { 
+                    country: parts[0],
+                    city: parts[1],
+                    km: parts[2]
+                  };
+                }
+				        return data;
+					    },
+					    onClick: function(e, container){
+					      var _self = this;
+					      var actions = [];
+					      var params = this.getKmValues(this.parent.parent.parent.km);
+					      this.dialog = null;
+	              var submit_btn = this.root.fmx.dialog_action({
+	                name: 'Submit',
+	                containerOnClick: function(e, element, instance){
+	                  _self.submitBtnOnClick(e, element, instance);
+	                }
+	              });
+	              actions.push(submit_btn);
+					      this.dialog = this.root.fmx.dialog({
+					        url: '/kms/select',
+					        params: params,
+					        height: 600,
+					        actions: actions
+					      });
+					    },
+					    submitBtnOnClick: function(e, element, instance){
+					      var filters = this.parent.dialog_select.filters;
+					      var link = this.getCompareLink(filters);
+					      if(link == null){
+					        //TODO launch warning no filters selected
+					      }else{
+					        console.log(link);
+					        this.dialog.close();
+					        this.dialog = null;
+					        window.location.href = link;
+					      }
+					    },
+					    getCompareLink: function(data){
+                var link = null;
+				        var link_base = unescape(config.server.paths.compare) + '?';
+					      var length = data.length;
+					      var res = [];
+					      for(var i = 0; (i < length) && i < 4; ++i){
+					        var km = data[i].km;
+					        if(km != null){
+					          res.push(encodeURIComponent('km['+ i + ']') + '=' + encodeURIComponent(km.id));
+					          //res.push(km.id);
+					          //if(i < (length - 1)) res.push('vs');
+					        }
+					      }
+					      if(res.length > 0){
+					        link = link_base + res.join('&');
+					      }
+					      return link;
+					    }
+					  });
+					  compare_btn.init();
+					}, // 2014 end compare btn
 					initSearchBar: function(){
 						var search_bar = {};
 						$.extend(search_bar, {

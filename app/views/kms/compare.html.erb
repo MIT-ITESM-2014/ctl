@@ -1,0 +1,10 @@
+<% content_for :head do %>
+	<%= stylesheet_link_tag 'app/views/compare' %>
+	<%= javascript_include_tag 'app/views/compare' %>
+<% end %>
+<div id="compare">
+  <% cls = 'compare_map' %>
+  <% @kms.each do |km| %>
+    <div class="<%= cls %>" data-km="<%= km.to_json %>"></div>
+  <% end %>
+</div>

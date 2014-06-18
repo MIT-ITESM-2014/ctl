@@ -17,6 +17,12 @@
 		top: 0px;
 		height: 100%;
 	}
+	@include link('a#header_compare_btn'){
+	  float: left;
+	  margin: 2px 0 0 0;
+	  font-size: 11px;
+	  padding: 8px 16px 8px 16px;
+	}
 	.header_search_bar{
 		@include border-radius(3px, 3px, 3px, 3px);
 		background: none repeat scroll 0 0 $header-base;

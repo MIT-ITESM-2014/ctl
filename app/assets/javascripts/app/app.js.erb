@@ -111,6 +111,16 @@ $.extend(app, {
 	},
 	fmx: {
 		root: null,
+		dialog: function(opts){
+			return $.fmx_dialog(
+				$.extend(opts, config.fmx.dialog())
+			);
+		},
+		dialog_action: function(opts){
+			return $.fmx_dialog_action(
+				$.extend(opts, config.fmx.dialog_action())
+			);
+		},
 		notification: function(opts){
 			return $.fmx_notification(
 				$.extend(opts, config.fmx.notification(), this.root.getTouchOpts())
