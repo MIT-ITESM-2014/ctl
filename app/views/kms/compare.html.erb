@@ -3,8 +3,11 @@
 	<%= javascript_include_tag 'app/views/compare' %>
 <% end %>
 <div id="compare">
+  <% i = 0 %>
   <% cls = 'compare_map' %>
   <% @kms.each do |km| %>
-    <div class="<%= cls %>" data-km="<%= km.to_json %>"></div>
+    <% id = "#{cls}#{i}" %>
+    <div id="<%= id %>" class="<%= cls %>" data-km="<%= km.to_json %>"></div>
+    <% i += 1 %>
   <% end %>
 </div>

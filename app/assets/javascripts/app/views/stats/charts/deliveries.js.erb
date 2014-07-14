@@ -1,0 +1,148 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.example = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart();
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initChart();
+        this.ready();
+      },
+      initChart: function(){
+        this.container.attr('id','example');
+      },
+      render: function(){
+        this.container.css('display', 'block');
+        var opts = {
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'Deliveries'
+          },
+
+          credits: {
+                  text: 'Chart depicts information about deliveries during data collection process for a week of observation', 
+                  enabled: false
+              },
+
+          subtitle: {
+              text:'Number of Observed Deliveries and Top 3 Delivery Vehicles per Km2'
+          },
+           credits: {
+                  text: 'Chart depicts total number of deliveries during a week of data collection process', 
+                  enabled: true
+              },
+
+          xAxis: {
+              type: 'category',
+              title: {
+                      text: ''
+                  }
+
+          },
+          
+          yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'Number of Deliveries'
+                  }
+              },
+
+          legend: {
+              enabled: false
+          },
+
+          plotOptions: {
+              series: {
+                  borderWidth: 0,
+                  dataLabels: {
+                      enabled: true,
+                      floating: true
+                  }
+              }
+          },
+
+
+          series: [{
+              name:'Deliveries',
+              colorByPoint: true,
+              data: [{
+                  name: 'JTAR',
+                  y: 311,
+                  drilldown: 'jtar',
+              }, {
+                  name: 'Zocalo',
+                  y: 146,
+                  drilldown: 'zocalo'
+              }, {
+                  name: 'Pinheiros',
+                  y: 345,
+                  drilldown: 'pinheiros'
+              },{
+                  name: 'Correa',
+                  y: 274,
+                  drilldown: 'correa'
+
+              }]
+          }],
+
+          tooltip: {
+              enabled: false
+          },
+
+
+          drilldown: {
+              series: [{
+                  name:'Delivery Vehicles',
+                  id: 'jtar',
+                  data: [
+                      ['Rigid Truck', 142],
+                      ['Van', 107],
+                      ['Pedestrian', 41]
+                  ]
+              },
+
+               {
+                  name:'Delivery Vehicles',
+                  id: 'zocalo',
+                  data: [
+                      ['Rigid Truck', 92],
+                      ['Pedestrian', 15],
+                      ['Van', 12]
+                  
+                  ]
+              }, {
+                  name:'Delivery Vehicles',
+                  id: 'pinheiros',
+                  data: [
+                      ['Motorbike', 145],
+                      ['Rigid Truck', 91],
+                      ['Van', 90],
+                    
+                  ]
+              }, {
+                  name:'Delivery Vehicles',
+                  id: 'correa',
+                  data: [
+                      ['Pedestrian', 164],
+                      ['Bike', 86],
+                      ['Van', 10],
+                      
+                  ]
+              }]
+
+
+        }
+        };
+        this.container.highcharts(opts);
+      },
+      ready: function(){
+        this.view.slider.addSlide(this);
+      }
+    });
+    el.init();
+  });
+})(jQuery);

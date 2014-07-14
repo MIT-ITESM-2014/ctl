@@ -1,0 +1,88 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.observed_vehicles = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart('observed_vehicles');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts, {
+          title: {
+            text: local.title
+          },
+          subtitle: {
+            text: local.subtitle
+          },
+          credits: {
+            text: local.credits
+          },
+          xAxis: {
+            categories: this.getXAxis(),
+            tickmarkPlacement: 'on',
+            title: {
+              text: local.x_axis
+            }
+          },
+          yAxis: {
+            title: {
+              text: local.y_axis
+            }
+          }
+        });
+      },
+      setData: function(){
+        var series = this.data;
+        $.extend(this.opt, {
+          series: series
+        });
+      },
+      render: function(){
+        //this.container.css('display', 'block');
+        var opts = {
+            series: [{
+                name: 'Cars',
+                data: [19239,1813,7955,395]
+            }, {
+                name: 'Taxis',
+                data: [3247,812,1699,522],
+                
+            }, {
+                name: 'Pickup Trucks',
+                data: [518,187,692,19],
+                visible: false
+            }, {
+                name: 'Articulated Trucks',
+                data: [1,1,0,0],
+                visible: false
+            }, {
+                name: 'Rigid Trucks',
+                data: [1243,308,412,62],
+                visible: false
+            }, {
+                name: 'Buses',
+                data: [1434,60,20,246]
+            },{
+                name: 'Bikes',
+                data: [11,330,152,43],
+                
+            },{
+                name: 'MotorBikes',
+                data: [15556,200,1375,151],
+                
+            },{
+                name: 'Bus',
+                data: [10, 0, 0, 1],
+               
+            }]
+        };
+        //this.container.highcharts(opts);
+      }
+    });
+    el.init();
+  });
+})(jQuery);

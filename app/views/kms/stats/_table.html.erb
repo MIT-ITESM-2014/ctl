@@ -1,0 +1,36 @@
+<div id="stats_table_container">
+  <table id="stats_table" class="fmx_table">
+      <thead>
+        <tr>
+          <th><!-- Categories --></th>
+          <th><!-- Fields --></th>
+          <% @kms.each do |km| %>
+          <th>
+            <%= km.name %>
+          </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% Api::Km::Categories::List.each do |key, category| %>
+          <% fields = category[:fields] %>
+          <% rowspan = fields.length %>
+          <% i = 0 %>
+          <% fields.each do |key, field| %>
+            <tr>
+              <% if i == 0 %>
+              <td class="stats_table_category" rowspan="<%= rowspan %>"><%= category[:name] %></td>
+              <% end %>
+              <td>
+                <%= field[:name] %>
+              </td>
+              <% @kms.each do |km| %>
+              <td><%= km.get_stat(field[:method]) %></td>
+              <% end %>
+            </tr>
+            <% i += 1 %>
+          <% end %> 
+        <% end %>
+      </tbody>
+  </table>
+</div>

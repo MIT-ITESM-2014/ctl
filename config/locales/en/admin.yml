@@ -90,6 +90,7 @@ en:
           title: 'Countries'
           fields:
             name: 'Name'
+            gini: 'Gini Index'
             city_count: 'City Count'
             image: 'Image'
           actions:
@@ -104,6 +105,7 @@ en:
             location: 'Location'
             population: 'Population'
             population_density: 'Pop. Density'
+            future_population: 'Future Pop.'
             area: 'Area(km2)'
             us_exchange_rate: 'US Exchange rate'
             gdp: 'GDP(USD)'
@@ -130,6 +132,10 @@ en:
             parking_restrictions_count: 'P. Res'
             shops_count: 'Shops'
             deliveries_count: 'Deliveries'
+            speed: 'Speed'
+            uff: 'UFF'
+            ucf: 'UCF'
+            area_type: 'Area Type'
             description: 'Description'
             comments: 'Comments'
             location: 'km2 Center'

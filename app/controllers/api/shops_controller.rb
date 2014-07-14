@@ -2,7 +2,8 @@ class Api::ShopsController < Api::ApiController
   
   include Api::Kmable
   
-  before_filter :assert_km, only: [:chart, :map, :heat]
+  before_filter :assert_km, only: [:chart, :map, :heat, :stats]
+  before_filter :assert_kms, only: [:inventory]
   
   # POST /api/shops/chart
   def chart
@@ -16,11 +17,15 @@ class Api::ShopsController < Api::ApiController
     render json: { contents: self.km.api_map_shops }
   end
   
-  
   # POST /api/shops/heat
   def heat
     Api::Shop.json_display = Api::Shop::Json::Heat
     render json: { contents: self.km.api_heat_shops }  
+  end
+  
+  # POST /api/shops/inventory
+  def inventory
+    render json: { contents: Api::Km.api_shop_inventory(@kms) }
   end
   
 end

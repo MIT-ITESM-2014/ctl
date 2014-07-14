@@ -1,2 +1,12 @@
 <%= javascript_include_tag(url_for action: :select_action) %>
-<div id="select_dialog" data-location="<%= @location.to_json %>"></div>
+<% l_base = 'app.views.km.select' %>
+<div id="select_dialog">
+  <div id="select_dialog_header">
+    <div id="select_dialog_header_title"><%= t "#{l_base}.title" %></div>
+    <div id="select_dialog_header_subtitle"><%= t "#{l_base}.subtitle" %></div>
+  </div>
+  <div id="select_dialog_filters" data-location="<%= @location.to_json %>"></div>
+  <a href="#" id="select_dialog_btn" class="button">
+    <%= t("#{l_base}.actions.go") %>
+  </a>
+</div>

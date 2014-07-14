@@ -1,0 +1,115 @@
+(function(){
+  $(function(){
+    var el = app.splash.km_select = {};
+    $.extend(el, {
+      parent: app.splash,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initContainer();
+        this.initForm();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent;
+      },
+      initConfig: function(){
+        this.config = this.parent.config.km_select;
+      },
+      initLang: function(){
+        this.lang = this.parent.lang.km_select;
+      },
+      initContainer: function(){
+        this.container = $('#km_select_dialog');
+      },
+      initForm: function(){
+        this.form = {};
+        $.extend(this.form, {
+          root: this.root,
+          parent: this,
+          view: this.view,
+          container: null,
+          submit_btn: null,
+          km_id: null,
+          dropdown: null,
+          init: function(){
+            this.initContainer();
+            this.initSelect();
+            this.initSubmitBtn();
+            this.initForm();
+          },
+          initContainer: function(){
+            this.container = this.parent.container.find('#km_select_dialog_form');
+          },
+          initSelect: function(){
+            var _self = this;
+            this.dropdown = this.container.find('#km_field_select');
+            this.dropdown.change(function(){
+              _self.dropdownOnChange($(this));
+            });
+          },
+          dropdownOnChange: function(option){
+            this.km_id = option.val();
+          },
+          initSubmitBtn: function(){
+            this.submit_btn = this.container.find('#km_select_dialog_form_submit');
+          },
+          initForm: function(){
+            var _self = this;
+            this.container.submit(function(e){
+              e.preventDefault();
+              _self.submit();
+            });
+          },
+          submit: function(){
+            if(!this.submit_btn.is('.disabled')){
+              if(this.km_id != null){
+                this.loading();
+                var _self = this;
+                this.root.api_client.load({
+                  key: 'show_km',
+                  data: {
+                    km_id: this.km_id
+                  },
+                  success: function(data){
+                    _self.success(data);
+                  }
+                });
+              }
+            }
+          },
+          success: function(data){
+            this.loaded();
+            if(data && data.km){
+              var km = data.km;
+              var url = this.root.getKmLink(km);
+              if(url != null){
+                this.root.relocate(url);
+              }
+            }else{
+              this.root.error();
+            }
+          },
+          loading: function(){
+            this.submit_btn.addClass('disabled');
+            this.root.loading();
+          },
+          loaded: function(){
+            this.submit_btn.removeClass('disabled');
+            this.root.loaded();
+          }
+        });
+        this.form.init();
+      }
+    });
+    el.init()
+  });
+})(jQuery);

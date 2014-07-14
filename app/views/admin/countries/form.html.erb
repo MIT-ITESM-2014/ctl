@@ -4,14 +4,21 @@
 <%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
 	<fieldset>
 		<div class="field">
-			<label><%= t('app.admin.views.countries.fields.name')  %></label>
+			<label><%= t('app.admin.views.countries.fields.name') %></label>
 			<div class="field_container">
 				<%= f.text_field :name %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.countries.fields.image')  %>(<%= Admin::Country::Image::Width %>x<%= Admin::Country::Image::Height %>)</label>
+			<label><%= t('app.admin.views.countries.fields.gini') %></label>
+			<div class="field_container">
+				<%= f.text_field :gini %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.countries.fields.image') %>(<%= Admin::Country::Image::Width %>x<%= Admin::Country::Image::Height %>)</label>
 			<div id="country_image_uploader" class="field_container"></div>
 			<div class="clear"></div>
 		</div>

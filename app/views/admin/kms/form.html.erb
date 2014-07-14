@@ -6,38 +6,66 @@
 <%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
 	<fieldset>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.name')  %></label>
+			<label><%= t('app.admin.views.kms.fields.name') %></label>
 			<div class="field_container">
 				<%= f.text_field :name %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.city_id')  %></label>
+			<label><%= t('app.admin.views.kms.fields.city_id') %></label>
 			<div class="field_container">
 				<%= f.select :city_id, Admin::City.select_list, prompt: true %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.location')  %></label>
+			<label><%= t('app.admin.views.kms.fields.location') %></label>
 			<div id="kms_coordinates_selector" class="field_container"></div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.street_location')  %></label>
+			<label><%= t('app.admin.views.kms.fields.street_location') %></label>
 			<div id="kms_street_coordinates_selector" class="field_container"></div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.description')  %></label>
+			<label><%= t('app.admin.views.kms.fields.speed') %></label>
+			<div class="field_container">
+				<%= f.text_field :speed %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.uff') %></label>
+			<div class="field_container">
+				<%= f.text_field :uff %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.ucf') %></label>
+			<div class="field_container">
+				<%= f.text_field :ucf %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.area_type') %></label>
+			<div class="field_container">
+				<%= f.text_field :area_type %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.description') %></label>
 			<div class="field_container">
 				<%= f.text_area :description %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.comments')  %></label>
+			<label><%= t('app.admin.views.kms.fields.comments') %></label>
 			<div class="field_container">
 				<%= f.text_area :comments %>
 			</div>

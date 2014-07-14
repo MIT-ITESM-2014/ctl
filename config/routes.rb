@@ -9,6 +9,7 @@ Ctl::Application.routes.draw do
     # app routes
     get 'show/(:country)/(:city)/(:km)' => 'kms#show', as: :show
     get 'compare' => 'kms#compare', as: :compare
+    get 'stats' => 'kms#stats', as: :stats
     
     # wildcard routes
     get ':controller(/:action(/:id))'

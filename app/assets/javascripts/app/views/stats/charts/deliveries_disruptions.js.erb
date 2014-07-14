@@ -1,0 +1,49 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.deliveries_disruptions = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart('deliveries_disruptions');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts,{
+          title: {
+            text: local.title
+          },
+          credits: {
+            text: local.credits
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: local.y_axis
+            }
+          },
+          xAxis: {
+            categories: this.getXAxis(),
+            title: {
+              text: local.x_axis
+            }
+          }
+        });
+      },
+      setData: function(){
+        $.extend(this.opts,{
+          series: [{
+            name: 'Deliveries',
+            data: this.data.deliveries
+          },{
+            name: 'Obstructions',
+            data: this.data.disruptions
+          }]
+        });
+      }
+    });
+    el.init();
+  });
+})(jQuery);

@@ -22,6 +22,5 @@ class Api::CountriesController < Api::ApiController
     Api::City.json_display = Api::City::Json::Filter
     render json: { contents: self.country.active_cities_filter }
   end
-  
-  
+
 end

@@ -23,6 +23,12 @@ $.extend(lang, {
 			},
 			actions: {
 				go: '<%= t 'app.views.splash.actions.go' %>'
+			},
+			map: {
+				title: '<%= t 'app.views.about.map.map.title' %>',
+				actions: {
+				  back_btn: '<%= t 'app.views.splash.map.actions.back_btn' %>'
+				}
 			}
 		},
 		about: {
@@ -31,6 +37,32 @@ $.extend(lang, {
 			}
 		},
 		compare: {
+		  panel: {
+		    panel: {
+		      section: {
+		        shops:{
+		          label: '<%= t 'app.views.compare.panel.panel.section.shops.labels.title' %>'
+		        },
+		        loading:{
+		          labels: {
+		            title: '<%= t 'app.views.compare.panel.panel.section.loading.labels.title' %>',
+		            public_mts: '<%= t 'app.views.compare.panel.panel.section.loading.labels.public_mts' %>',
+		            private_mts: '<%= t 'app.views.compare.panel.panel.section.loading.labels.private_mts' %>'
+		          }
+		        },
+		        uff_ucf: {
+			        labels: {
+		            title: '<%= t 'app.views.compare.panel.panel.section.uff_ucf.labels.title' %>',
+		            uff: '<%= t 'app.views.compare.panel.panel.section.uff_ucf.labels.uff' %>',
+		            ucf: '<%= t 'app.views.compare.panel.panel.section.uff_ucf.labels.ucf' %>'
+		          }	          
+		        }
+		      },
+		      actions: {
+		        stats: '<%= t 'app.views.compare.panel.panel.actions.stats' %>'
+		      }
+		    }
+		  },
 			map: {
 				styles: {
 					_default: '<%= t 'app.views.km.map.styles._default' %>',
@@ -39,7 +71,83 @@ $.extend(lang, {
 				}
 			}
 		},
+		stats: {
+		  slider: {
+		    labels: {
+		      not_found: 'No charts found.'
+		    }
+		  },
+		  charts: {
+		    error_msg: 'Error Msg',
+		    shops: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.shops.chart.title' %>',
+		        subtitle: '<%= t 'app.views.stats.charts.shops.chart.subtitle' %>',
+		        y_axis: '<%= t 'app.views.stats.charts.shops.chart.y_axis' %>'
+		      }
+		    },
+		    obstruction_sources: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.obstruction_sources.chart.title' %>',
+		        subtitle: '<%= t 'app.views.stats.charts.obstruction_sources.chart.subtitle' %>',
+		        credits: '<%= t 'app.views.stats.charts.obstruction_sources.chart.credits' %>'
+		      }
+		    },
+		    delivery_intensity: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.delivery_intensity.chart.title' %>',
+		        subtitle: '<%= t 'app.views.stats.charts.delivery_intensity.chart.subtitle' %>',
+		        credits: '<%= t 'app.views.stats.charts.delivery_intensity.chart.credits' %>'
+		      }
+		    },
+		    deliveries_disruptions: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.deliveries_disruptions.chart.title' %>',
+		        credits: '<%= t 'app.views.stats.charts.deliveries_disruptions.chart.credits' %>',
+		        x_axis: '<%= t 'app.views.stats.charts.deliveries_disruptions.chart.x_axis' %>',
+		        y_axis: '<%= t 'app.views.stats.charts.deliveries_disruptions.chart.y_axis' %>'
+		      }
+		    },
+		    parking: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.parking.chart.title' %>',
+		        x_axis: '<%= t 'app.views.stats.charts.parking.chart.x_axis' %>',
+		        y_axis: '<%= t 'app.views.stats.charts.parking.chart.y_axis' %>',
+		        y_axis_2: '<%= t 'app.views.stats.charts.parking.chart.y_axis_2' %>',
+		      }
+		    },
+		    public_vs_dedicated: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.public_vs_dedicated.chart.title' %>',
+		        y_axis: '<%= t 'app.views.stats.charts.public_vs_dedicated.chart.y_axis' %>',
+		        y_axis_2: '<%= t 'app.views.stats.charts.public_vs_dedicated.chart.y_axis_2' %>'
+		      }
+		    },
+		    observed_vehicles: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.observed_vehicles.chart.title' %>',
+		        subtitle: '<%= t 'app.views.stats.charts.observed_vehicles.chart.subtitle' %>',
+		        credits: '<%= t 'app.views.stats.charts.observed_vehicles.chart.credits' %>',
+		        x_axis: '<%= t 'app.views.stats.charts.observed_vehicles.chart.x_axis' %>',
+		        y_axis: '<%= t 'app.views.stats.charts.observed_vehicles.chart.y_axis' %>'
+		      }
+		    },
+		    lanes: {
+		      chart: {
+		        title: '<%= t 'app.views.stats.charts.lanes.chart.title' %>',
+		        y_axis: '<%= t 'app.views.stats.charts.lanes.chart.y_axis' %>'
+		      }
+		    }
+		  }
+		},
 		km: {
+		  select: {
+				labels: {
+					country: '<%= t 'app.views.km.select.labels.country' %>',
+					city: '<%= t 'app.views.km.select.labels.city' %>',
+					km2: '<%= t 'app.views.km.select.labels.km2' %>'
+				}
+		  },
 			header: {
 				search: {
 					labels: {
@@ -107,6 +215,15 @@ $.extend(lang, {
 						meters: '<%= t 'app.views.km.elements.loading.fields.meters' %>'
 					}
 				},
+				uff_ucf: {
+					title: '<%= t 'app.views.km.elements.uff_ucf.title' %>',
+					units: '<%= t 'app.views.km.elements.uff_ucf.units' %>',
+					second_units: '<%= t 'app.views.km.elements.uff_ucf.second_units' %>',
+				  separator: '<%= t 'app.views.km.elements.uff_ucf.separator' %>'
+				},
+				speed: {
+				  title: '<%= t 'app.views.km.elements.speed.title' %>'
+				},
 				deliveries: {
 					title: '<%= t 'app.views.km.elements.deliveries.title' %>',
 					units: '<%= t 'app.views.km.elements.deliveries.units' %>',
@@ -166,6 +283,13 @@ $.extend(lang, {
 	},
 	fmx: {
 		parent: null,
+		overlay: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
 		dialog: function(){
 			var opts = {};
 			$.extend(opts, {

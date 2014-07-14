@@ -1,7 +1,7 @@
 class KmsController < FrontController
   
   before_filter :assert_km, only: [:show, :show_action, :select]
-  before_filter :assert_kms, only: [:compare]
+  before_filter :assert_kms, only: [:compare, :stats]
   before_filter :page_elements, only: [:show]
   
   def show
@@ -10,6 +10,19 @@ class KmsController < FrontController
   
   def show_action
     self.set_display
+  end
+  
+  def test
+    render layout: 'application'
+  end
+  
+  def stats
+    @title = 'Statistics Report'
+    @description = 'Descripción'
+    @tags = 'tags'
+    @ids = self.get_kms_ids
+    @names = self.get_kms_subtitle
+    render layout: 'application'
   end
   
   def compare
@@ -39,6 +52,19 @@ class KmsController < FrontController
     @kms = tmp unless tmp.empty?
   end
   
+  def get_kms_ids
+    @kms.map do |km|
+      km.id
+    end
+  end
+  
+  def get_kms_subtitle
+    names = @kms.map do |km|
+      km.name
+    end
+    names.join('|')
+  end
+  
   def get_location
     @location = { km_id: @km.id, city_id: @km.city_id, country_id: @km.country_id }
   end
@@ -49,6 +75,10 @@ class KmsController < FrontController
   
   def set_display
     Api::Km.json_display = Api::Km::Json::List
+  end
+  
+  def set_stats
+    Api::Km.json_display = Api::Km::Json::Stats
   end
   
   def title

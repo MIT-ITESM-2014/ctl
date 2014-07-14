@@ -15,12 +15,23 @@ en:
     views:
       splash:
         title: 'Welcome to km2!'
-        subtitle: "We've collected data from all around the world. Please select a city to continue."
+        subtitle: "We've collected data from all around the world."
+        subtitle2: "Select a city and a zone(km2) to continue."
+        km_select:
+          form:
+            fields:
+              km:
+                prompt: 'Select a zone(km2)'
+            actions:
+              go: 'Go!'
         labels:
           not_found: 'No cities found.'
         actions:
           go: 'Go!'
           learn_more: 'Learn more'
+        map:
+          actions:
+            back_btn: 'Back'
         fields:
           population: 
             title: 'Population'
@@ -60,15 +71,89 @@ en:
             traffic_disruptions:
               title: 'Disruptions'
               content: 'Describes disruptions in the traffic flow by both freight vehicles and other sources, including a measure of the severity.'
+      compare:
+        panel:
+          panel:
+            section:
+              shops:
+                labels:
+                  title: 'Shop Inventory'
+              loading:
+                labels:
+                  title: 'Loading/Unloading areas'
+                  public_mts: 'public mts'
+                  private_mts: 'private mts'
+              uff_ucf:
+                labels:
+                  title: 'UFF/UCF'
+                  uff: 'UFF'
+                  ucf: 'UCF'
+            actions:
+              stats: 'Compare more data'
+      stats:
+        title: 'Statistics Report'
+        actions:
+          download: 'Download PDF'
+        charts:
+          shops:
+            chart:
+              title: 'Shop Inventory'
+              subtitle: 'Number of Shops Observed per Km2 and Distribution per Shop Type'
+              y_axis: 'Shops'
+          obstruction_sources:
+            chart:
+              title: 'Source of Obstruction'
+              subtitle: 'Sources of Observed Traffic Obstruction in Street Segment'
+              credits: 'Observed traffic obstructions during data collection process'
+          delivery_intensity:
+            chart:
+              title: 'Delivery Intensity'
+              subtitle: 'Average Number of Deliveries Observed per Hour'
+              credits: 'Chart depicts information about deliveries during data collection process for a week of observation'
+              x_axis: 'Hour'
+              y_axis: 'Km2'
+          deliveries_disruptions:
+            chart:
+              title: 'Percentage of Deliveries That Caused Obstruction'
+              credits: 'Chart depicts information about deliveries during data collection process for a week of observation'
+              x_axis: 'Km2'
+              y_axis: 'Percentage'
+          parking:
+            chart:
+              title: 'Distribution of Lanes per Km2 and Number of Public/Dedicated Bays'
+              x_axis: 'Km2'
+              y_axis: 'Distribution of Parking Lanes (%)'
+              y_axis_2: 'Bays'
+          public_vs_dedicated:
+            chart:
+              title: 'Public Vs. Dedicated Parking'
+              y_axis: 'Bays'
+              y_axis_2: 'Meter Length'
+          observed_vehicles:
+            chart:
+              title: 'Vehicle Usage'
+              subtitle: 'Observed Vehicles in Street Segment'
+              credits: 'Chart displays information about observed vehicles during data collection process'
+              x_axis: 'Km2'
+              y_axis: 'Percent'
+          lanes:
+            chart:
+              title: 'Distribution of One Way and Two Way Streets'
+              y_axis: 'Distribution of One Way and Two Way Streets'
       km:
+        select:
+          title: 'Compare km2'
+          subtitle: 'Select a country, city and a zone (km2):'
+          labels:
+            country: 'Country'
+            city: 'City'
+            km2: 'km2'
+          actions:
+            go: 'Go!'
         header:
           search:
             labels:
               search: 'search city...'
-          compare:
-            labels:
-              title: 'Compare'
-              button: 'Compare'
           filters:
             labels:
               country: 'Country'
@@ -76,6 +161,10 @@ en:
               km2: 'km2'
               style: 'Map Style'
               share: 'Share'
+          compare:
+            labels:
+              title: 'Compare'
+              button: 'Compare'
           share:
             labels:
               permalink: 'Link / Embed'
@@ -102,7 +191,6 @@ en:
             title: 'Loading/Unloading areas'
             units: 'public mts'
             second_units: 'dedicated mts'
-            separator: 'Street Info'
             chart:
               category: 'Street id #{research_id}'
               public_meter_length: 'public mts'
@@ -110,6 +198,13 @@ en:
               y_label: 'length (mts)'
             fields:
               meters: 'meters'
+          uff_ucf:
+            title: 'UFF/UCF'
+            units: 'UFF'
+            second_units: 'UCF'
+            separator: 'Segment Analysis'
+          speed:
+            title: 'Speed'
           deliveries:
             title: 'Deliveries'
             units: 'per hour'

@@ -7,3 +7,4 @@
 //= require app/views/compare/compare
 //= require app/views/compare/maps/styles
 //= require app/views/compare/maps/maps
+//= require app/views/compare/panel/panel

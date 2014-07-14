@@ -9,7 +9,9 @@
 //= require app/views/km/elements/elements
 //= require app/views/km/elements/shops
 //= require app/views/km/elements/loading
+//= require app/views/km/elements/uff_ucf
 //= require app/views/km/elements/deliveries
+//= require app/views/km/elements/speed
 //= require app/views/km/elements/traffic_counts
 //= require app/views/km/elements/traffic_disruptions
 //= require app/views/km/header

@@ -1,0 +1,134 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts = {};
+    $.extend(el, {
+      parent: app.stats,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent.view;
+      },
+      initConfig: function(){
+        this.config = this.parent.config.charts;
+      },
+      initLang: function(){
+        this.lang = this.parent.lang.charts;
+      },
+      getChart: function(name){
+        var chart = {};
+        $.extend(chart, {
+          parent: this,
+          root: this.root,
+          view: this.view,
+          name: name,
+          config: this.config,
+          lang: this.lang,
+          container: null,
+          rendered: false,
+          error_msg: null,
+          data: null,
+          opts: {},
+          init: function(){
+            this.initContainer();
+            this.initErrorMsg();
+            this.initConfig();
+            this.initLang();
+          },
+          initConfig: function(){
+            this.config = this.config[name];
+          },
+          initLang: function(){
+            this.lang = this.lang[name];
+          },
+          initSlide: function(){
+            this.view.slider.addSlide(this);
+          },
+          initErrorMsg: function(){
+            this.error_msg = $('<div class="stats_slider_chart_error"></div>');
+            this.error_msg.html(this.lang.error_msg);
+            this.error_msg.appendTo(this.container);
+          },
+          initContainer: function(){
+            this.container = $('<div class="stats_slider_chart"></div>');
+            this.container.attr('id', name);
+          },
+          _error: function(){
+            this._loaded();
+            this.error_msg.css('display', 'block');
+            this.error();
+          },
+          _loaded: function(){
+            this.view.slider.render();
+            this.loaded();         
+          },
+          _render: function(){
+            this.container.css('display', 'block');
+            if(!this.rendered){
+              this.setConfig();
+              this.setLang();
+              this.setData();
+              this.rendered = true;
+              this.render();
+            }else{
+              this.render();
+            }
+          },
+          getData: function(){
+            var url = this.config.url;
+            var params = this.view.getParams();
+            $.ajax({
+              url: url,
+              type: 'POST',
+              context: this,
+              data: params,
+              success: this.success,
+              error: this.error
+            });
+          },
+          success: function(data){
+            if((data != null) && (data.contents != null)){
+              this.data = data.contents;
+              this._loaded();
+            }else{
+              this._error();
+            }
+          },
+          getXAxis: function(){
+            var result = [];
+            var kms = this.data.kms;
+            for(var i = 0; i < kms.length; ++i){
+              result.push(kms[i].name);
+            }
+            return result;
+          },
+          // Implement callbacks if needed
+          error: function(){},
+          loaded: function(){},
+          setConfig: function(){
+            $.extend(this.opts, this.config.chart);
+          },
+          // Implement for default function of chart
+          setLang: function(){},
+          setData: function(){},
+          render: function(){
+            this.container.highcharts(this.opts);
+          }
+        });
+        chart.init();
+        return chart;
+      }
+    });
+    el.init();
+  });
+})(jQuery);

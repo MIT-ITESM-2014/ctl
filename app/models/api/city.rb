@@ -8,13 +8,13 @@ class Api::City < City
     }
     Filter = {}
     Map = {
-      only: [:name]
+      only: [:id, :name, :area, :population, :population_density, :area, :big_mac_index]
     }
   end
   
   scope :list, ->{ select('cities.id, cities.country_id, cities.name, cities.population, cities.population_density, cities.area, cities.big_mac_index').filter_active.ascending }
   scope :filter_base, ->{ select('cities.id, cities.name') }
-  scope :map_base, ->{ select('cities.name') }
+  scope :map_base, ->{ select('cities.id, cities.country_id, cities.name, cities.population, cities.population_density, cities.area, cities.big_mac_index') }
   scope :search_term, ->(term){ where('cities.name ~* ?', term) }
   
   def self.json_display

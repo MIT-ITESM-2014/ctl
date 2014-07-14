@@ -71,6 +71,7 @@ class StreetData < ActiveRecord::FmxBase
   scope :meter_base, ->{ select("SUM(street_data.parking_area_length) as public_meter_length, SUM(street_data.loading_area_length) as dedicated_meter_length").order(nil) }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_street, ->(street_id){ where(street_id: street_id) }
+  scope :filter_by_parking_lanes, ->(lanes){ where('street_data.parking_lanes = ?', lanes) }
   
   validates :way, presence: true, numericality: { only_integer: true }, inclusion: { in: Way.keys }
   validates :driving_lanes, numericality: { only_integer: true }, allow_blank: true

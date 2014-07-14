@@ -3,6 +3,7 @@ class Api::DeliveriesController < Api::ApiController
   include Api::Kmable
   
   before_filter :assert_km, only: [:chart, :map]
+  before_filter :assert_kms, only: [:intensity]
   
   # POST /api/deliveries/chart
   def chart
@@ -16,5 +17,9 @@ class Api::DeliveriesController < Api::ApiController
     render json: { contents: self.km.api_map_deliveries }
   end
   
+  # POST /api/deliveries/intensity
+  def intensity
+    #render json: { contents: Api:: }
+  end
   
 end

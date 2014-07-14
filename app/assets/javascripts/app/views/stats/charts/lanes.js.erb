@@ -1,0 +1,42 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.lanes = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart('lanes');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts,{
+          title: {
+            text: local.title
+          },
+          yAxis: {
+            title: {
+              text: local.y_axis
+            }
+          },
+          xAxis: {
+            categories: this.getXAxis()
+          }
+        });
+      },
+      setData: function(){
+        $.extend(this.opts,{
+          series: [{
+            name: 'One Way Streets',
+            data: this.data.one_way
+          },{
+            name: 'Two Way Streets',
+            data: this.data.two_way
+          }]
+        });
+      }
+    });
+    el.init();
+  });
+})(jQuery);

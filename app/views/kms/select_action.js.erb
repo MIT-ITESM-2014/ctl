@@ -1,8 +1,8 @@
 (function(){
   $(function(){
-    var el = app.km.header.select = {};
+    var el = app.km.select = {};
 	  $.extend(el, {
-	    parent: app.km.header,
+	    parent: app.km,
 	    root: null,
 	    container: null,
 	    filters: [],
@@ -10,98 +10,124 @@
 	    lang: null,
 	    config: null,
 	    data: {},
-	    dialog: null,
 	    submit_btn: null,
 	    init: function(){
 	      this.initRoot();
 	      this.initView();
-	      this.initDialog();
 	      this.initLang();
 	      this.initConfig();
+	      this.initWrapper();
 	      this.initContainer();
-	      this.initAddBtn();
 	      this.initData();
-	      this.initInstance();
+	      this.initSubmitBtn();
+	      this.initFilters();
 	    },
 	    initRoot: function(){
 	      this.root = this.parent.root;
 	    },
 	    initLang: function(){
-	      this.lang = this.view.lang.filters;
+	      this.lang = this.view.lang.select;
 	    },
 	    initConfig: function(){
-	      this.config = this.view.config;
+	      this.config = this.view.config.select;
 	    },
-	    initDialog: function(){
-	      this.dialog = this.parent.right_container.dialog;
+	    initWrapper: function(){
+	      this.wrapper = $('#select_dialog');
 	    },
 	    initContainer: function(){
-	      this.container = $('#select_dialog');
+	      this.container = this.wrapper.find('#select_dialog_filters');
 	    },
 	    initView: function(){
-	      this.view = this.parent;
+	      this.view = this.parent.view;
 	    },
 	    initData: function(){
 	      this.data = this.container.attr('data-location');
-	      this.addFilters({ data: this.data });
 	    },
-	    initInstance: function(){
-	      this.parent.right_container.dialog_select = this;
+	    initSubmitBtn: function(){
+	      var _self = this;
+	      this.submit_btn = this.wrapper.find('#select_dialog_btn');
+	      this.root.click(this.submit_btn, function(e, container){
+	        _self.submitBtnOnClick();
+	      });
 	    },
-	    addBtnOnClick: function(e, container){
-	      if(this.filters.length < 4){
-          this.addFilters();
+	    submitBtnOnClick: function(){
+	      var url = this.getCompareLink(this.filters);
+	      if(url != null){
+          window.location.href = url;	      
 	      }
 	    },
-      initAddBtn: function(){
-        var _self = this;
-        this.add_btn = $('<a href="#" class="add_select_filter_btn button">ADD</a>');
-        this.add_btn.appendTo(this.container);
-        this.root.click(this.add_btn, function(e, container){
-          _self.addBtnOnClick(e, container);
-        });
-      },
-	    addFilters: function(opts){
-	      var el = {};
-	      $.extend(el, {
+	    getCompareLink: function(data){
+        var link = null;
+        var link_base = unescape(config.server.paths.compare) + '?';
+	      var length = data.length;
+	      var res = [];
+	      for(var i = 0; (i < length) && i < 4; ++i){
+	        var km = data[i].km;
+	        if(km != null){
+	          res.push(encodeURIComponent('km['+ i + ']') + '=' + encodeURIComponent(km.id));
+	        }
+	      }
+	      if(res.length > 0){
+	        link = link_base + res.join('&');
+	      }
+	      return link;
+	    },
+	    initFilters: function(e, container){	      
+	      var length = this.config.filters;
+	      for(var i = 0; i < length; ++i){
+	        this.addFilters(i, this.data);
+	      }
+	      //this.filters[0].preload();
+	    },
+	    addFilters: function(index, data){
+	      var filter = {};
+	      $.extend(filter, {
+	        index: index,
+	        data: data,
 	        parent: this,
-	        root: null,
-	        data: {
-	          country_id: null,
-	          city_id: null,
-	          km_id: null
-	        },
-	        km: null,
+	        root: this.root,
+	        labels: this.config.labels,
+	        icons: this.config.icons,
 	        container: null,
-	        labels: [],
-	        icons: [],
-	        add_btn: null,
-	        filters: {
-	          country: null,
-	          city: null,
-	          km2: null
-	        },
+	        top: null,
+	        content: null,
+	        bottom: null,
+	        result: null,
+	        remove_btn: null,
+	        filters: {},
+	        km: null,
 	        init: function(){
-	          this.initRoot();
-	          this.initLabels();
-	          this.initIcons();
 	          this.initContainer();
-	          this.initDropdowns();
-	          var clear = $('<div class="clear"></div>');
-	          clear.appendTo(this.container);
+	          this.hide();
 	        },
-	        initRoot: function(){
-	          this.root = this.parent.root;
-	        },
-	        initLabels: function(){
-	          this.labels = this.parent.lang.labels;
-	        },
-	        initIcons: function(){
-	          this.icons = this.parent.config.icons;
+	        preload: function(){
+	          if(this.filters != null){
+	            this.filters.country.setActiveByKey('list_countries', true);
+	            this.filters.city.setActiveByKey('list_cities', true);
+	            this.filters.km.setActiveByKey('list_kms', true);	          
+	          }
 	        },
 	        initContainer: function(){
-	          this.container = $('<div class="select_filters"></div>');
-	          this.container.appendTo(this.parent.container);
+	          this.container = $('<div class="select_dialog_filter"></div>');
+	          this.initTop();
+	          this.initBottom();
+	          this.container.appendTo(this.parent.container)
+	        },
+	        initTop: function(){
+	          this.top = $('<div class="sdf_top"></div>');
+	          this.initLabel();
+	          this.initContent();
+	          this.top.append('<div class="clear"></div>');
+	          this.top.appendTo(this.container);
+	        },
+	        initLabel: function(){
+	          var label = $('<div class="sdf_top_index">' + (this.index + 1) + '.</div>');
+	          label.appendTo(this.top);
+	        },
+	        initContent: function(){
+	          this.content = $('<div class="sdf_top_content"></div>');
+	          this.initDropdowns();
+	          this.content.appendTo(this.top);
 	        },
 	        initDropdowns: function(){
 	          this.initCountryDropdown();
@@ -119,9 +145,9 @@
 	          });
 	        },
 	        countryDropdownOnChange: function(which){
+	          this.hide();
 	          this.filters.city.clear();
 	          this.filters.km2.clear(false);
-	          this.km = null;
 						$.extend(this.filters.city.data, {
 							country_id: which.data.id
 						});
@@ -140,7 +166,7 @@
 						});
 					},
 					cityDropdownOnChange: function(which){
-					  this.km = null;
+					  this.hide();
 						this.filters.km2.clear();
 						$.extend(this.filters.km2.data, {
 							city_id: which.data.id
@@ -160,13 +186,16 @@
 						});
 					},
 					km2DropdownOnChange: function(which){
-						if(which != null) this.km = which.data;
+						if(which != null){
+						  this.km = which.data;
+						  this.show(this.km.name);
+						}
 					},
           getDropdown: function(key, opts){
 	          var view = this.parent.view;
 	          var label = this.parent.lang.labels[key];
 	          var icon = this.parent.config.icons[key];
-	          var container = this.container;
+	          var container = this.content;
 	          return this.root.fmx.dropdown(
 		          $.extend(opts, {
 			          api_client: this.root.api_client,
@@ -178,10 +207,41 @@
 			          }
 		          })
 	          );
-          }
-	      }, opts);
-	      el.init();
-	      this.filters.push(el);
+          },
+	        initBottom: function(){
+	          this.bottom = $('<div class="sdf_bottom"></div>');
+	          this.initResult();
+	          this.initRemoveBtn();
+	          this.bottom.append('<div class="clear"></div>');
+	          this.bottom.appendTo(this.container);
+	        },
+	        initResult: function(){
+	          this.result = $('<div class="sdf_bottom_result"></div>');
+	          this.result.appendTo(this.bottom);
+	        },
+	        initRemoveBtn: function(){
+	          this.remove_btn = $('<a href="#" class="sdf_bottom_remove_btn">X</a>');
+	          this.remove_btn.appendTo(this.bottom);
+	          var _self = this;
+	          this.root.click(this.remove_btn, function(e, container){
+	            _self.removeBtnOnClick();
+	          });
+	        },
+	        removeBtnOnClick: function(){
+	          this.hide();
+	        },
+	        show: function(result){
+	          this.result.html(result);
+	          this.remove_btn.css('opacity', 1);
+	        },
+	        hide: function(){
+	          this.km = null;
+	          this.result.html('');
+	          this.remove_btn.css('opacity', 0);
+	        }
+	      });
+	      filter.init();
+	      this.filters.push(filter);
 	    }
 	  });
 	  el.init();

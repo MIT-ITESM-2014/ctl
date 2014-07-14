@@ -1,0 +1,44 @@
+(function(){
+  $(function(){
+    var el = app.stats = {};
+    $.extend(el, {
+      parent: app,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      container: null,
+      kms: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initContainer();
+        this.initKms();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this;
+      },
+      initConfig: function(){
+        this.config = config.views.stats;
+      },
+      initLang: function(){
+        this.lang = lang.views.stats;
+      },
+      initContainer: function(){
+        this.container = this.root.wrapper.find('#stats');
+      },
+      initKms: function(){
+        this.kms = this.container.data('kms');
+      },
+      getParams: function(){
+        return { km: this.kms }
+      }
+    });
+    el.init();
+  });
+})(jQuery);

@@ -177,7 +177,7 @@
 		}
 		&#km_panel{
 			width: 250px;
-			height: 320px;
+			height: 514px;
 			&.km_panel_header_title{
 				width: 190px;
 			}
@@ -313,7 +313,7 @@
 				}
 			}
 			&.small{
-				width: 80px;
+				width: 122px;
 				height: 110px;
 				float: left;
 				margin: 0 0 0 2px;
@@ -332,8 +332,8 @@
 					top: 75px;
 				}
 				.km_panel_element_title{
-					left: 9px;
-					top: 6px;
+					left: 30px;
+					top: 5px;
 				}
 				.km_panel_element_actions{
 					right: 4px;
@@ -367,7 +367,7 @@
 				}
 			}
 			&.loading{
-				border-bottom: 0 none;
+				/*border-bottom: 0 none;*/
 				.km_panel_element_stat, .km_panel_element_unit{
 					left: 80px;
 					width: 80px;
@@ -388,6 +388,30 @@
 					top: 23px;
 				}
 			}
+		  &.uff_ucf{
+		    border-bottom: 0 none;
+				.km_panel_element_stat, 
+				.km_panel_element_unit{
+					left: 80px;
+					width: 80px;
+					&.second{
+						left: 160px;
+					}
+				}
+				.km_panel_element_stat{
+					font-size: 20px;
+					top: 30px;
+				}
+				.km_panel_element_unit{
+					font-size: 11px;
+					top: 55px;
+				}
+		    img.main_icon{
+		      height: 22px;
+		      left: 10px;
+		      top: 32px;
+		    }
+		  }
 		}
 		.km_panel_element_title{
 			color: #444444;
@@ -442,12 +466,52 @@
 		}
 	}
 }
-.select_filters{
-  width: 315px;
-  margin: 20px auto 100px auto;
-  @include link('a.add_select_filter_btn'){
-	  float: left;
-	  font-size: 11px;
-	  padding: 8px 16px 8px 16px;
+.fmx_dialog_container{
+  .fmx_dialog_header{
+    padding: 20px 20px 0 0;
+    border: 0 none;
+  }
+}
+#select_dialog{
+  font-weight: $light;
+  text-align: center;
+  #select_dialog_header_title{
+    font-size: 32px;
+    margin: 0 0 15px 0;
+  }
+  #select_dialog_header_subtitle{
+    font-size: 16px;
+    margin: 0 0 15px 0;
+  }
+  .select_dialog_filter{
+    margin: 0 0 20px 53px;
+    .sdf_top_index,
+    .sdf_top_content{
+      float: left;
+    }
+    .sdf_top_index{
+      margin: 5px 18px 0 0;
+    }
+    .sdf_bottom{
+      margin: 5px 0 0 0;
+    }
+    .sdf_bottom_result,
+    .sdf_bottom_remove_btn{
+      float: left;
+    }
+    .sdf_bottom_result{
+      display: block;
+      width: 250px;
+    }
+    @include link('a.sdf_bottom_remove_btn'){
+      text-decoration: none;
+      color: $black;
+    }
+  }
+  @include link('a#select_dialog_btn'){
+    display: block;
+    width: 145px;
+    padding: 15px 0 15px 0;
+    margin: 0 auto;
   }
 }

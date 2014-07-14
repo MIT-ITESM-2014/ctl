@@ -10,6 +10,8 @@ class Api::Street < Street
   scope :api_chart_base, ->{ select('streets.research_id, streets.public_meter_length, streets.dedicated_meter_length').chart_order.with_data.research_ascending }
   scope :chart_order, ->{ order('streets.public_meter_length DESC, streets.dedicated_meter_length DESC')  }
   scope :api_map_base, ->{ select('streets.research_id, streets.public_meter_length, streets.dedicated_meter_length, streets.lat1, streets.lng1, streets.lat2, streets.lng2').with_location }
+  scope :count_public_bays_by_km, ->(km){ base_count.filter_by_km(km).with_public_data }
+  scope :count_private_bays_by_km, ->(km){ base_count.filter_by_km(km).with_private_data }
   
   def self.json_display
     @@json_display ||= Json::Default
@@ -55,6 +57,17 @@ class Api::Street < Street
       }
     }
     data
+  end
+  
+  def self.api_bays_distribution(kms)
+    public_bays = []
+    private_bays = []
+    kms.each do |km|
+      id = km.id
+      public_bays << self.count_public_bays_by_km(id)[0][:num]
+      private_bays << self.count_private_bays_by_km(id)[0][:num]
+    end
+    { public_bays: public_bays, private_bays: private_bays }
   end
   
   

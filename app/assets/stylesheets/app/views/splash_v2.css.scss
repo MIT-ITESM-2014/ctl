@@ -1,0 +1,104 @@
+@import 'app/shared.css.scss';
+#wrapper{
+  @include bg-color($white);
+}
+#splash{
+  height: 100%;
+  font-weight: $light;
+  text-align: center;
+  padding: 0 0 50px 0;
+  h1{
+    margin: 44px 0 38px 0;
+    font-size: 62px;
+  }
+  h2{
+    p{
+      margin: 0 0 15px 0;
+    }
+    width: 788px;
+    font-size: 18px;
+    margin: 0 auto 28px auto;
+  }
+  @include link('a#splash_about'){
+	  display: block;
+	  width: 100px;
+	  margin: 0 auto;
+  }
+	#splash_map_actions{
+	  @include link('a#splash_map_back_btn'){
+	    float: right;
+	    font-size: 11px;
+	    padding: 8px 16px 8px 16px;
+	  }
+	}
+	#splash_map_container{
+		width: 100%;
+		height: 690px;
+		margin: 0 auto;
+		display: block;
+	}
+	.city_tooltip{
+	  font-family: $font-family;
+	  font-weight: $light;
+	  .city_tooltip_header{
+	    border-bottom: 2px solid $white;
+	    margin: 0 0 10px 0;
+	  }
+	  .city_tooltip_header_city{
+	    font-size: 32px;
+	    text-align: center;
+	  }
+	  .city_tooltip_header_country{
+	    font-size: 16px;
+	    text-align: center;
+	    margin: 0 0 10px 0;
+	  }
+	  .city_tooltip_data_field{
+	    margin: 0 0 10px 0;
+	    font-size: 12px;
+	  }
+	  .city_tooltip_data_label{
+	    float: left;
+	    font-weight: $semi-bold;
+	  }
+	  .city_tooltip_data_content{
+	    float: right;
+	    text-align: right;
+	  }
+	}
+}
+.fmx_dialog_container{
+  .fmx_dialog_header{
+    padding: 20px 20px 0 0;
+    border: 0 none;
+  }
+}
+#km_select_dialog{
+  font-weight: $light;
+  text-align: center;
+  #km_select_dialog_form{
+    .field{
+      margin: 0 0 30px 0;
+    }
+  }
+  #km_select_dialog_city{
+    font-size: 32px;
+    margin: 0 0 16px 0;
+  }
+  #km_select_dialog_country{
+    font-size: 16px;
+    margin: 0 0 35px 0;
+  }
+  #km_field_select{
+    display: block;
+    width: 490px;
+    font-size: 12px;
+    padding: 16px 16px 16px 16px;
+    color: $white;
+    margin: 0 auto 16px auto;
+    @include bg-color(#175C94);
+  }
+  input[type="submit"]{
+    padding: 20px 100px 20px 100px;
+  }
+}

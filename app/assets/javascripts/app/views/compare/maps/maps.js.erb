@@ -6,6 +6,7 @@
       root: null,
       view: null,
       maps: [],
+      styles: null,
       init: function(){
         this.initRoot();
         this.initView();
@@ -24,17 +25,23 @@
         });
       },
       googleMapsOnLoad: function(){
+        this.initStyles();
         this.initMaps();
         this.view.ready();
       },
+      initStyles: function(){
+        this.styles = this.parent.map_styles;
+        this.styles.initStyles();
+      },
       initMaps: function(){
-        var kms = this.view.container.find('.compare_map');
+        var kms = this.view.kms;
         var length = kms.length;
         for(var i = 0; i < length; ++i){
-          var container = $(kms[i]);
+          var container = kms[i];
           var km = container.attr('data-km');
           km = JSON.parse(km);
-          this.addMap({ container: container,  km: km });
+          kms[i].data = km;
+          this.addMap({ index: i, container: container,  km: km });
         }
       },
       addMap: function(opts){
@@ -50,6 +57,8 @@
           center: null,
           container: null,
           config: null,
+          label: null,
+          index: 0,
           init: function(){
             this.initRoot();
             this.initView();
@@ -57,8 +66,8 @@
             this.initStyles();
             this.initCenter();
             this.initMap();
-            this.initStyle();
             this.initLayers();
+            //this.initLabel();
           },
           initRoot: function(){
             this.root = this.parent.root;
@@ -70,11 +79,7 @@
             this.config = this.view.config.map;
           },
           initStyles: function(){
-            this.styles = this.view.map_styles;
-            this.styles.initStyles();
-          },
-          initStyle: function(){
-            //this.styles.setMap(this.map);
+            this.styles = this.parent.styles;
           },
           initCenter: function(){
             this.center = new google.maps.LatLng(this.km.lat, this.km.lng);
@@ -83,27 +88,53 @@
             var container = this.container.get(0);
             this.map = new google.maps.Map(container, 
 					    $.extend({
-						    center: this.center
-						    //mapTypeControlOptions: {
-							    //mapTypeIds: this.styles.key_list
-						    //}
+						    center: this.center,
+						    mapTypeControlOptions: {
+							    mapTypeIds: this.styles.key_list
+						    }
 					    }, this.config.map.opts)
             );
-				    /*var list = this.styles.list;
+            this.initStyle();   
+          },
+          initLabel: function(){
+            this.label = $('<div class="compare_map_label"></div>');
+            this.label.appendTo(this.container);
+            this.label.html(this.km.name);
+          },
+          initStyle: function(){
+            this.styles.setMap(this.map);
+				    var list = this.styles.list;
 				    var style = null;
 				    $.each(list, function(key, el){
 					    style = el;
 					    return false;
-				    });*/
-				    //if(style != null) this.setStyle(style);
-				    //this.map.panTo(this.center);          
+				    });
+				    if(style != null) this.setStyle(style); 
           },
           setStyle: function(style){
             this.style = style;
             this.map.setMapTypeId(this.style.gm_key);
           },
           initLayers: function(){
+            this.initTrafficLayer();
             this.initHeatLayer(); 
+          },
+          initTrafficLayer: function(){
+            var el = {};
+            $.extend(el, {
+              parent: this,
+              layer: null,
+              init: function(){
+                this.render();
+              },
+              render: function(){
+                if(this.layer == null){
+                  this.layer = new google.maps.TrafficLayer();
+                  this.layer.setMap(this.parent.map);
+                }
+              }
+            });
+            el.init();
           },
           initHeatLayer: function(){
             var el = {};
@@ -111,6 +142,7 @@
               parent: this,
               root: null,
               view: null,
+              config: null,
               req: null,
               params: {
                 km_id: this.km.id
@@ -151,33 +183,22 @@
                 this.render();
               },
               render: function(){
-                var points = this.arrayToPoint(this.data);
-                //var google_points = new google.maps.MVCArray(points);
-                this.layer = new google.maps.visualization.HeatmapLayer({
-                  data: points,
-                  dissipating: true
-                });
-                var gradient = [
-                  'rgba(0,255,255,0)',
-                  'rgba(0,255,255,1)',
-                  'rgba(0,191,255,1)',
-                  'rgba(0,127,255,1)',
-                  'rgba(0,63,255,1)',
-                  'rgba(0,0,255,1)',
-                  'rgba(0,0,255,1)',
-                  'rgba(0,0,223,1)',
-                  'rgba(0,0,191,1)',
-                  'rgba(0,0,159,1)',
-                  'rgba(0,0,127,1)',
-                  'rgba(63,0,91,1)',
-                  'rgba(127,0,63,1)',
-                  'rgba(191,0,31,1)',
-                  'rgba(255,0,0,1)'
-                ];
-                this.layer.set('gradient', gradient);
-                this.layer.set('radius', 75);
-                this.layer.set('opacity', null);
-                this.layer.setMap(this.parent.map);
+                if(this.layer == null){
+                  var points = this.arrayToPoint(this.data);
+                  var gradient = this.config.gradient;
+                  var radius = this.config.radius;
+                  var opacity = this.config.opacity;
+                  var max_intensity = this.config.max_intensity;
+                  this.layer = new google.maps.visualization.HeatmapLayer({
+                    data: points,
+                    dissipating: true,
+                    gradient: gradient,
+                    opacity: opacity,
+                    radius: radius,
+                    maxIntensity: max_intensity
+                  });
+                  this.layer.setMap(this.parent.map);
+                }
               },
               arrayToPoint: function(data){
                 var result = [];
@@ -186,6 +207,7 @@
                   for(var i = 0; i < length; ++i){
                     var el = data[i];
                     var point = { location: new google.maps.LatLng(el.lat, el.lng), weight: el.f_length };
+                    //var point = { location: new google.maps.LatLng(el.lat, el.lng), weight: 1 };
                     result.push(point);
                   }
                 }

@@ -17,6 +17,7 @@
         this.initConfig();
         this.initLang();
         this.initContainer();
+        this.setInterface();
       },
       initRoot: function(){
         this.root = this.parent.root;
@@ -32,56 +33,45 @@
       },
       initContainer: function(){
         this.container = this.root.wrapper.find('#compare');
+        this.kms = this.container.find('.compare_map');
+        var length = this.kms.length;
+        for(var i = 0; i  < length; ++i){
+          this.kms[i] = $(this.kms[i]);
+        }
       },
       setInterface: function(){
-        //if(this.kms.length == 2){ // TODO constants
-          //this.setSplitScreen();
-        //}else{
+        var length = this.kms.length;
+        if(length == 2){
+          this.setSplitScreen();
+        }else if(length >= 3){
           this.setFourScreen();
-        //}
+        }else{
+          // Normal render
+        }
       },
       setSplitScreen: function(){
-        var maps = this.container.find('.compare_map');
-        maps.addClass('split_two');
-        var map0 = $(maps[0]);
-        var map1 = $(maps[1]);
-        var width = map0.width();
-        map0.css({ left: 0 });
-        map1.css({ left: width });
+        var map = this.kms;
+        map[0].css({ left: 0 }).addClass('split_two');
+        var width = map[0].width();
+        map[1].css({ left: width }).addClass('split_two');
       },
       setFourScreen: function(){
-        console.log('set four screen');
-        var maps = this.container.find('.compare_map');
-        if(maps.length == 4){
-          maps.addClass('split_four');
-          var map0 = $(maps[0]);
-          var map1 = $(maps[1]);
-          var map2 = $(maps[2]);
-          var map3 = $(maps[3]);
-          var width = map0.width();
-          var height = map0.height();
-          map0.css({left: 0, top: 0});
-          map1.css({left: width, top: 0});
-          map2.css({left: 0, top: height});
-          map3.css({left: width, top: height});
+        var map = this.kms;
+        var length = map.length;
+        map[0].css({left: 0, top: 0}).addClass('split_four');
+        var width = map[0].width();
+        var height = map[0].height();
+        map[1].css({left: width, top: 0}).addClass('split_four');
+        map[2].css({left: 0, top: height}).addClass('split_four');
+        if(length == 4){
+          map[3].css({left: width, top: height}).addClass('split_four');
         }
       },
       abort: function(){
         if(this.req != null) this.req.abort();
       },
       ready: function(){
-        this.setInterface();
-      },
-      loadKms: function(){
-        var _self = this;
-        var length = this.kms.length;
-        // TODO setInterface
-        for(var i = 0; i < length; ++i){
-          var km =  this.kms[i];
-          this.loadKm(km);
-        }
-      },
-      loadKm: function(which){}
+      }
     });
     app.compare.init();
   });

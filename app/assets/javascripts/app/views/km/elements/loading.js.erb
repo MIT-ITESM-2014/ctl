@@ -156,49 +156,12 @@
 					},
 					initContainer: function(){
 						this.container.addClass('full');
-						this.in
+						//this.in
 					},
 					appendTo: function(panel){
 						this.panel = panel;
 						this.container.appendTo(this.panel.container);
-						this.initSeparator();
-					},
-					initSeparator: function(){
-						var separator = {};
-						$.extend(separator, {
-							parent: this,
-							root: null,
-							view: null,
-							element: null,
-							container: null,
-							init: function(){
-								this.initRoot();
-								this.initView();
-								this.initElement();
-								this.initContainer();
-							},
-							initContainer: function(){
-								this.container = $('<div class="km_panel_separator"></div>');
-								this.initTitle();
-								this.container.insertAfter(this.parent.container);
-							},
-							initTitle: function(){
-								var label = this.element.lang.separator;
-								var title = $('<h1 class="km_panel_separator_title"></h1>');
-								title.html(label);
-								title.appendTo(this.container);
-							},
-							initRoot: function(){
-								this.root = this.parent.root;
-							},
-							initView: function(){
-								this.view = this.parent.view;
-							},
-							initElement: function(){
-								this.element = this.parent.element;
-							}
-						});
-						separator.init();
+						//this.initSeparator();
 					}
 				});
 				this.panel.init();

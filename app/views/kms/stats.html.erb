@@ -1,0 +1,28 @@
+<% content_for :head do %>
+	<%= stylesheet_link_tag 'app/views/stats' %>
+	<%= javascript_include_tag 'app/views/stats' %>
+<% end %>
+<% l_base = 'app.views.stats' %>
+<div id="stats" data-kms="<%= @ids %>">
+	<div class="panel view">
+		<div class="panel_wrapper">
+			<div class="panel_header">
+				<div class="panel_title_wrapper">
+					<h1 class="panel_title"><%= t "#{l_base}.title" %></h1>
+					<div class="panel_title_actions">
+						<a class="panel_action button" href="#"><%= t "#{l_base}.actions.download" %></a>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<p class="panel_subtitle">
+          <%= @names %>
+				</p>
+			</div>
+			<div class="panel_content">
+				<%= render partial: 'kms/stats/slider' %>
+				<%= render partial: 'kms/stats/table' %>
+			</div>
+		</div>
+	</div>
+</div>

@@ -7,8 +7,5 @@ class Admin::TrafficCount < TrafficCount
   def as_json(opts = {})
     super(opts.merge(methods: [:s_at, :e_at]))
   end
-  
-  
-  
-  
+
 end

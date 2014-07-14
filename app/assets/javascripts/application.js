@@ -1,5 +1,6 @@
 //= require app/ui/ga
 //= require jquery-1.10.2.min
+//= require fmx/overlay
 //= require fmx/notification
 //= require fmx/sprite
 //= require fmx/placeholder

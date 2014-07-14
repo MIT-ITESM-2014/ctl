@@ -1,0 +1,88 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.example = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart();
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initChart();
+        this.ready();
+      },
+      initChart: function(){
+        this.container.attr('id','example');
+      },
+      render: function(){
+        this.container.css('display', 'block');
+        var opts = {
+          title: {
+              text: 'Deliveries'
+          },
+          
+          credits: {
+                  text: 'Chart depicts information about deliveries during data collection process for a week of observation', 
+                  enabled: true
+              },
+
+          yAxis:{
+            title: {
+              text: 'Average Number of Deliveries'
+            }
+          },
+
+
+          xAxis: {
+              categories: ['JTAR','Zocalo','Pinheiros','Correa'],
+              title:'Km2'
+          },
+          title: {
+              text: 'Deliveries'
+          },
+          labels: {
+              items: [{
+                  html: '',
+                  style: {
+                      right: '50px',
+                      top: '18px',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }]
+          },
+          series: [{
+              type: 'column',
+              name: 'Average Deliveries per Hour',
+              data: [6.22,2.92,6.9,9.133],
+              tooltip: {
+                      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
+                      },
+          }, {
+              type: 'column',
+              name: 'Average Deliveries During Peak Period',
+              data: [10.20,6.20,10.47,11.73],
+              tooltip: {
+                      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
+                      },
+          }, {
+              type: 'spline',
+              name: 'Global Average',
+              data: [6.29, 6.29, 6.29, 6.29],
+              tooltip: {
+                      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
+                      },
+              marker: {
+                  lineWidth: 4,
+                  lineColor: Highcharts.getOptions().colors[3],
+                  fillColor: 'white'}
+      
+          }]
+        };
+        this.container.highcharts(opts);
+      },
+      ready: function(){
+        this.view.slider.addSlide(this);
+      }
+    });
+    el.init();
+  });
+})(jQuery);

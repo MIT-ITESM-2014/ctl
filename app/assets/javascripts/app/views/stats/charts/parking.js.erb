@@ -1,0 +1,105 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.parking = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart('parking');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts,{
+          title: {
+            text: local.title
+          },
+          xAxis: {
+            categories: this.getXAxis(),
+            title: {
+              text: local.x_axis
+            }
+          },
+          yAxis: [{ // Primary yAxis
+              labels: {
+                style: {
+                  color: Highcharts.getOptions().colors[1]
+                }
+              },
+              title: {
+                text: local.y_axis,
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+              },
+              subtitle: {
+                text: '(%)',
+              }
+            },{ // Secondary yAxis
+              title: {
+                text: local.y_axis_2,
+                min:0,
+                style: {
+                  color: Highcharts.getOptions().colors[0]
+                }
+              },
+              labels: {
+                style: {
+                  color: Highcharts.getOptions().colors[0]
+                }
+              },
+              opposite: true
+          }]
+        });
+      },
+      getLanes: function(){
+        var lanes = this.data.lanes;
+        var series = [];
+        $.each(lanes,function(k, v){
+          var tmp = {
+            type: 'column',
+            name: k + ' Parking Lanes',
+            data: v
+          };
+          series.push(tmp);
+        });
+        return series;
+      },
+      getBays: function(series){
+        var bays = this.data.bays;
+        series.push({
+          type: 'spline',
+          name: 'Public Bays',
+          yAxis: 1,
+          data: bays.public_bays,
+          marker: {
+            lineWidth: 4,
+            lineColor: Highcharts.getOptions().colors[7],
+            fillColor: 'white'
+          }
+        });
+        series.push({
+          type: 'spline',
+          name: 'Private Bays',
+          yAxis: 1,
+          data: bays.private_bays,
+          marker: {
+            lineWidth: 4,
+            lineColor: Highcharts.getOptions().colors[4],
+            fillColor: 'white'
+          }          
+        });
+        return series;
+      },
+      setData: function(){
+        var lanes = this.getLanes();
+        var series = this.getBays(lanes);
+        $.extend(this.opts,{
+          series: series
+        });
+      }
+    });
+    el.init();
+  });
+})(jQuery);

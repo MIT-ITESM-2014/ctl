@@ -1,0 +1,401 @@
+(function(){
+  $(function(){
+    app.compare.panel = {};
+    $.extend(app.compare.panel, {
+      parent: app.compare,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      container: null,
+      panel: null,
+      dimens: {
+        width: 0,
+        height: 0
+      },
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initContainer();
+        this.initPanel();
+        this.initDimens();
+        this.initPosition();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent;
+      },
+      initConfig: function(){
+        this.config = this.view.config.panel;
+      },
+      initLang: function(){
+        this.lang = this.view.lang.panel;
+      },
+      initContainer: function(){
+        this.container = $('<div id="compare_panel_container"></div>');
+        this.container.appendTo(this.view.container);
+      },
+      initDimens: function(){
+        $.extend(this.dimens, {
+          width: this.container.width(),
+          height: this.container.height()
+        });
+      },
+      initPosition: function(){
+        var left = (this.parent.container.width() - this.dimens.width) / 2;
+        var top = (this.parent.container.height() - this.dimens.height) / 2;
+        this.container.css({
+          top: top,
+          left: left
+        }); 
+      },
+      initPanel: function(){
+        this.panel = {};
+        $.extend(this.panel, {
+          parent: this,
+          root: this.root,
+          view: this.view,
+          contianer: null,
+          content: null,
+          config: this.config.panel,
+          lang: this.lang.panel,
+          hidden: false,
+          kms: this.view.kms,
+          data_kms: [],
+          init: function(){
+            this.initContainer();
+          },
+          hide: function(){
+            this.hidden = true;
+            this.container.css('opacity', 0);
+          },
+          show: function(){
+            this.hidden = false;
+            this.container.css(opacity, 0);
+          },
+          initContainer: function(){
+            this.container = $('<div id="compare_panel"></div>');
+            if(this.view.kms.length == 2){
+              this.container.addClass('split_two');
+            }
+            this.initContent();
+            this.initStatBtn();
+            this.container.appendTo(this.parent.container);
+          },
+          initContent: function(){
+            this.content = {};
+            $.extend(this.content,{
+              parent: this,
+              root: null,
+              kms: this.kms,
+              lang: null,
+              container: null,
+              sections: [],
+              init: function(){
+                this.initRoot();
+                this.initConfig();
+                this.initLang();
+                this.initContainer();
+              },
+              initRoot: function(){
+                this.root = this.parent.root;
+              },
+              initConfig: function(){
+                this.config = this.parent.config.section;
+              },
+              initLang: function(){
+                this.lang = this.parent.lang.section;
+              },
+              initContainer: function(){
+                this.container = $('<div id="compare_panel_content_container"></div>');
+                this.initData();
+                this.container.append('<div class="clear"></div>');
+                this.container.appendTo(this.parent.container);
+              },
+              initData: function(){
+                var length = this.kms.length;
+                for(var i = 0; i < length; ++i){
+                  var container = this.kms[i];
+                  var km = container.attr('data-km');
+                  km = JSON.parse(km);
+                  this.parent.data_kms.push(km);
+                  var opts = {
+                    index: i,
+                    km: km
+                  };
+                  this.addSection(opts);
+                }
+              },
+              addSection: function(opts){
+                var el = {};
+                $.extend(el, {
+                  parent: this,
+                  root: null,
+                  km: null,
+                  index: null,
+                  lang: null,
+                  container: null,
+                  init: function(){
+                    this.initRoot();
+                    this.initConfig();
+                    this.initLang();
+                    this.initContainer();
+                    this.initHeader();
+                    this.initInfo();
+                  },
+                  initRoot: function(){
+                    this.root = this.parent.root;
+                  },
+                  initConfig: function(){
+                    this.config = this.parent.config;
+                  },
+                  initLang: function(){
+                    this.lang = this.parent.lang;
+                  },
+                  initContainer: function(){
+                    var s = '<div id="compare_panel_section' + this.index + '" class="compare_panel_section"></div>';
+                    this.container = $(s);
+                    this.container.appendTo(this.parent.container);
+                  },
+                  initHeader: function(){
+                    this.initTitle();
+                    this.initSubtitle();
+                  },
+                  initTitle: function(){
+                    var title = $('<div class="compare_panel_section_title"></div>');
+                    title.html(this.km.name);
+                    title.appendTo(this.container);
+                  },
+                  initSubtitle: function(){
+                    var subtitle =  $('<div class="compare_panel_section_subtitle"></div>');
+                    subtitle.html(this.km.name);
+                    subtitle.appendTo(this.container);
+                  },
+                  initInfo: function(){
+                    this.initShops();
+                    this.initLoading();
+                    this.initUffUcf();
+                  },
+                  initShops: function(){
+                    var el = {};
+                    $.extend(el, {
+                      root: null,
+                      km: this.km,
+                      config: this.config.shops,
+                      lang: this.lang.shops,
+                      parent: this,
+                      container: null,
+                      icon: null,
+                      init: function(){
+                        this.initRoot();
+                        this.initContainer();
+                        this.initOverlay();
+                      },
+                      initRoot: function(){
+                        this.root = this.parent.root;
+                      },
+                      initContainer: function(){
+                        this.container = $('<div class="compare_panel_content shops"></div>');
+                        this.initContent();
+                        this.container.appendTo(this.parent.container);
+                      },
+                      initOverlay: function(){
+                        var msg = this.lang.label;
+                        this.root.fmx.overlay({
+				                  trigger: this.icon,
+				                  msg: msg
+                        });
+                      },
+                      initContent: function(){
+                        this.initIcon();
+                        this.initData();
+                        this.container.append($('<div class="clear"></div>'));
+                      },
+                      initIcon: function(){
+                        this.icon = $('<div class="compare_panel_content_icon"></div>');
+                        var img = $('<img src="' + this.config.icon +'" />');
+                        img.appendTo(this.icon);
+                        this.icon.appendTo(this.container);
+                      },
+                      initData: function(){
+                        this.getData();
+                        var span = $('<div class="compare_panel_content_data"></div>');
+                        span.html(this.shops);
+                        span.appendTo(this.container);
+                      },
+                      getData: function(){
+                        var km = this.km;
+                        this.shops = app.format.shortNumber(km.shops_count);
+                      }
+                    });
+                    el.init();
+                  },
+                  initLoading: function(){
+                    var el = {};
+                    $.extend(el, {
+                      root: null,
+                      km: this.km,
+                      config: this.config.loading,
+                      lang: this.lang.loading,
+                      parent: this,
+                      container: null,
+                      public_mts: 0,
+                      private_mts: 0,
+                      icon: null,
+                      init: function(){
+                        this.initRoot();
+                        this.initContainer();
+                        this.initOverlay();
+                      },
+                      initRoot: function(){
+                        this.root = this.parent.root;
+                      },
+                      initContainer: function(){
+                        this.container = $('<div class="compare_panel_content loading"></div>');
+                        this.initContent();
+                        this.container.appendTo(this.parent.container);
+                      },
+                      initOverlay: function(){
+                        var msg = this.lang.labels.title;
+                        this.root.fmx.overlay({
+				                  trigger: this.icon,
+				                  msg: msg
+                        });
+                      },
+                      initContent: function(){
+                        this.initIcon();
+                        this.initData();
+                        this.container.append($('<div class="clear"></div>'));
+                      },
+                      initIcon: function(){
+                        this.icon = $('<div class="compare_panel_content_icon"></div>');
+                        var img = $('<img src="' + this.config.icon +'" />');
+                        img.appendTo(this.icon);
+                        this.icon.appendTo(this.container);
+                      },
+                      initData: function(){
+                        this.getData();
+                        var public_mts = this.parent.getDataBlock(this.public_mts, this.lang.labels.public_mts);
+                        var private_mts = this.parent.getDataBlock(this.private_mts, this.lang.labels.private_mts);
+                        var span = $('<div class="compare_panel_content_data"></div>');
+                        public_mts.appendTo(span);
+                        private_mts.appendTo(span);
+                        span.append($('<div class="clear"></div>'));
+                        span.appendTo(this.container);
+                      },
+                      getData: function(){
+                        var km = this.km;
+                        this.public_mts = app.format.shortNumber(km.public_meter_length);
+                        this.private_mts = app.format.shortNumber(km.dedicated_meter_length);
+                      }
+                    });
+                    el.init();                  
+                  },
+                  initUffUcf: function(){
+                    var el = {};
+                    $.extend(el, {
+                      root: this.root,
+                      km: this.km,
+                      config: this.config.uff_ucf,
+                      lang: this.lang.uff_ucf,
+                      parent: this,
+                      container: null,
+                      icon: null,
+                      uff: 0,
+                      ucf: 0,
+                      init: function(){
+                        this.initContainer();
+                        this.initOverlay();
+                      },
+                      initContainer: function(){
+                        this.container = $('<div class="compare_panel_content uff_ucf"></div>');
+                        this.initContent();
+                        this.container.appendTo(this.parent.container);
+                      },
+                      initContent: function(){
+                        this.initIcon();
+                        this.initData();
+                        this.container.append($('<div class="clear"></div>'));
+                      },
+                      initIcon: function(){
+                        this.icon = $('<div class="compare_panel_content_icon"></div>');
+                        var img = $('<img src="' + this.config.icon +'" />');
+                        img.appendTo(this.icon);
+                        this.icon.appendTo(this.container);
+                      },
+                      initOverlay: function(){
+                        var msg = this.lang.labels.title;
+                        this.root.fmx.overlay({
+				                  trigger: this.icon,
+				                  msg: msg
+                        });
+                      },
+                      initData: function(){
+                        this.getData();
+                        var uff = this.parent.getDataBlock(this.uff, this.lang.labels.uff);
+                        var ucf = this.parent.getDataBlock(this.ucf, this.lang.labels.ucf);
+                        var span = $('<div class="compare_panel_content_data"></div>');
+                        uff.appendTo(span);
+                        ucf.appendTo(span);
+                        span.append($('<div class="clear"></div>'));
+                        span.appendTo(this.container);
+                      },
+                      getData: function(){
+                        var km = this.km;
+                        this.uff = app.format.shortNumber(km.uff);
+                        this.ucf = app.format.shortNumber(km.ucf);
+                      }
+                    });
+                    el.init();
+                  },
+                  getDataBlock: function(data, label){
+                    var container = $('<div class="compare_panel_content_datablock"></div>');
+                    var data_div = $('<div class="compare_panel_content_datablock_data">' + data + '</div>');
+                    var label_div = $('<div class="compare_panel_content_datablock_label">' + label + '</div>');
+                    data_div.appendTo(container);
+                    label_div.appendTo(container);
+                    return container;
+                  }
+                }, opts);
+                el.init();
+                this.sections.push(el);
+              }
+            });
+            this.content.init();
+          },
+          initStatBtn: function(){
+            var url = this.getStatsLink(this.data_kms);
+            if(url != null){
+              this.stats_btn = $('<a href="#" id="compare_panel_stats_btn" class="button"></a>');
+              this.stats_btn.html(this.lang.actions.stats);
+              this.stats_btn.attr('href', url);
+              this.stats_btn.appendTo(this.container);
+            }
+          },
+	        getStatsLink: function(data){
+            var link = null;
+            var link_base = unescape(config.server.paths.stats) + '?';
+	          var length = data.length;
+	          var res = [];
+	          for(var i = 0; (i < length) && i < 4; ++i){
+	            var km = data[i];
+	            if(km != null){
+	              res.push(encodeURIComponent('km['+ i + ']') + '=' + encodeURIComponent(km.id));
+	            }
+	          }
+	          if(res.length > 0){
+	            link = link_base + res.join('&');
+	          }
+	          return link;
+	        },
+        });
+        this.panel.init();
+      }
+    });
+    app.compare.panel.init();
+  });
+})(jQuery);

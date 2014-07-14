@@ -1,0 +1,471 @@
+(function(){
+  $(function(){
+    /**
+      FIXME Change drilldown simulation to highmaps drilldown functionality.
+      Highmaps v1.0.2 + drilldown.js module unable to solve 
+      multiple mapData + mappoint data render problem on drilldown
+    */
+    app.splash.map = {};
+    $.extend(app.splash.map,{
+      parent: app.splash,
+      root: null,
+      view: null,
+      wrapper: null,
+      container: null,
+      config: null,
+      lang: null,
+      data: {},
+      countries: null,
+      back_btn: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initWrapper();
+        this.initActions();
+        this.initContainer();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent;
+      },
+      initConfig: function(){
+        this.config = this.parent.config.map;
+      },
+      initLang: function(){
+        this.lang = this.parent.lang.map;
+      },
+      initWrapper: function(){
+        this.wrapper = this.parent.container.find('#splash_map');
+      },
+      initActions: function(){
+        var _self = this;
+        var actions = $('<div id="splash_map_actions"></div>');
+        var label = this.lang.actions.back_btn;
+        this.back_btn = $('<a href="#" id="splash_map_back_btn" class="button">' + label +'</div>');
+        this.hideBtn();
+        this.root.click(this.back_btn, function(e, container){
+          _self.backBtnClick(e, container);
+        });
+        this.back_btn.appendTo(actions);
+        actions.append($('<div class="clear"></div>'));
+        actions.appendTo(this.wrapper);
+      },
+      backBtnClick: function(e, container){
+        this.render();
+      },
+      initContainer: function(){
+        this.container = $('<div id="splash_map_container"></div>"');
+        this.container.appendTo(this.wrapper);
+        this.load();
+      },
+      load: function(){
+        var _self = this;
+        this.root.api_client.load({
+          key: 'list_map_countries',
+          success: function(data){
+            _self.success(data);
+          }
+        });
+      },
+      success: function(data){
+        var _self = this;
+        this.data = {};
+        $.each(data.contents, function(key, val){
+          _self.data[val.slug] = val;
+        });
+        this.render();
+      },
+      hideBtn: function(){
+        this.back_btn.css('opacity', 0);
+      },
+      showBtn: function(){
+        this.back_btn.css('opacity', 1);
+      },
+      render: function(){
+        var _self = this;
+        var data = this.getData();
+        this.container.highcharts('Map',
+          $.extend({
+            chart: {
+              events: {
+                drilldown: function(e){
+                  _self.drilldown(e, this);
+                }
+              }
+            },
+            title: '',
+            tooltip: {
+              formatter: function(){
+                return this.point.getTooltip();
+              }
+            },
+            series: [{
+              data: data,
+              valueRanges: this.config.valueRanges
+            }]
+          }, this.config.opts)
+        );
+      },
+      drilldown: function(e, chart){
+        // FIXME highcharts drilldown functionality
+        if(!e.seriesOptions){
+          var el = {};
+            $.extend(el, {
+              event: e,
+              chart: chart,
+              parent: this,
+              root: this.root,
+              config: this.config.drilldown,
+              obj: null,
+              country: null,
+              city: null,
+              url: null,
+              key: null,
+              container: null,
+              dialog: null,
+              init: function(){
+                this.initObj();
+                this.initCountry();
+                this.initUrl();
+                this.initContainer();
+                this.initData();
+              },
+              initObj: function(){
+                this.obj = this.event.point;
+              },
+              initCountry: function(){
+                this.country = this.obj.country;
+              },
+              initUrl: function(){
+                var key = this.obj.key;
+                if(key.length < 3){
+				          var s = 'countries';
+				          s += '/' + this.obj.key;
+				          s += '/' + this.obj.key;
+				          s += '-all';
+				          this.key = s
+				          s += '.js';
+				          this.url = this.config.url + s;                  
+                }
+              },
+              initContainer: function(){
+                this.container = this.parent.container;
+              },
+              loading: function(){
+                this.root.loading();
+              },
+              loaded: function(){
+                this.root.loaded();
+              },
+              initData: function(){
+                if(this.url != null){
+                  var _self = this;
+                  this.loading();
+                  $.getScript(this.url, function(){
+                    _self.success();
+                  });
+                }
+              },
+				      getData: function(){
+				        var hc = Highcharts;
+				        var geojson = hc.maps[this.key];
+                var data = hc.geojson(geojson, 'map');
+				        return data;
+				      },
+				      getDataSeries: function(){
+				        var data = this.getData();
+                var series = {
+				          name: this.country.name,
+				          type: 'map',
+				          data: data,
+				          dataLabels: {
+				            enabled: true,
+				            format: '{point.properties.postal-code}'
+				          }
+				        };
+                return series;
+				      },
+				      getCities: function(){
+				        var _self = this;
+				        var hc = Highcharts;
+				        var cities = {
+				          title: this.country.name,
+				          type: 'FeatureCollection',
+				          features: []
+				        };
+				        $.each(this.country.map_cities, function(key, val){
+				          var name = val.name.replace(/[ _-]/g,'').toLowerCase();
+				          var json = $.highcharts_cities[name];
+				          if(json != null){
+				            cities['features'].push(_self.getGeojson(json, val));
+				          }
+				        });
+				        cities = hc.geojson(cities, 'mappoint');
+				        $.each(cities, function(key, val){
+				          _self.getElement(val, _self.country, _self.root.format);
+				        });
+				        var series = {
+				          name: 'Cities',
+				          type: 'mappoint',
+				          data: cities,
+				          color: 'black',
+				          point: {
+				            events: {
+				              click: function(){
+				                _self.cityOnClick(this);
+				              }
+				            }
+				          },
+				          marker: {
+				            fillColor: 'black',
+				            radius: 2
+				          },
+				          dataLabels: {
+				            align: 'left',
+				            verticalAlign: 'middle'
+				          },
+				          animation: false
+				        };
+				        return series;
+				      },
+				      getElement: function(val, country, format){
+				        $.extend(val, {
+				          format: format,
+				          country: country,
+				          getTooltip: function(){
+				            var el = {};
+				            $.extend(el, {
+				              point: this,
+				              header: null,
+				              container: null,
+				              wrapper: null,
+				              data: null,
+				              city: null,
+				              init: function(){
+				                this.initCity();
+				                this.initWrapper();
+				                this.initContainer();
+				                this.initHeader();
+				                this.initData(); 
+				              },
+				              initCity: function(){
+				                this.city = this.point.properties.city;
+				              },
+				              initWrapper: function(){
+				                this.wrapper = $('<div class="city_tooltip_wrapper"></div>');
+				              },
+				              initContainer: function(){
+				                this.container = $('<div class="city_tooltip"></div>');
+				                this.container.appendTo(this.wrapper);
+				              },
+				              initHeader: function(){
+				                this.header = $('<div class="city_tooltip_header"></div>');
+				                this.initCityName();
+				                this.initCountryName();
+				                this.header.appendTo(this.container);
+				              },
+				              initCityName: function(){
+				                var city = $('<div class="city_tooltip_header_city"></div>');
+				                city.html(this.city.name);
+				                city.appendTo(this.header);
+				              },
+				              initCountryName: function(){
+				                var country = $('<div class="city_tooltip_header_country"></div>');
+				                country.html(this.point.country.name);
+				                country.appendTo(this.header);
+				              },
+				              initData: function(){
+				                this.data = $('<div class="city_tooltip_data"></div>');
+				                this.initArea();
+				                this.initPopulation();
+				                this.initDensity();
+				                this.initBMIndex();
+				                this.data.appendTo(this.container);
+				              },
+				              initArea: function(){
+				                var data = this.point.format.shortNumber(this.city.area);
+				                data += ' km2';
+				                var area = this.getDataField('Area', data);
+				                area.appendTo(this.data);
+				              },
+				              initPopulation: function(){
+				                var data = this.point.format.shortNumber(this.city.population);
+				                var population = this.getDataField('Population', data);
+				                population.appendTo(this.data);
+				              },
+				              initDensity: function(){
+				                var data = this.point.format.shortNumber(this.city.population_density);
+				                data += ' / km2'
+				                var density = this.getDataField('Density', data);
+				                density.appendTo(this.data);
+				              },
+				              initBMIndex: function(){
+				                var data = this.point.format.shortNumber(this.city.big_mac_index);
+				                var bmi = this.getDataField('Big Mac Index(USD)', data);
+				                bmi.appendTo(this.data);				                
+				              },
+				              getDataField: function(text, data){
+				                var field = $('<div class="city_tooltip_data_field"></div>');
+				                var label = $('<div class="city_tooltip_data_label"></div>');
+				                label.html(text);
+				                var content = $('<div class="city_tooltip_data_content"></div>');
+				                content.html(data);
+				                var clear = $('<div class="clear"></div>');
+				                content.appendTo(field);
+				                label.appendTo(field);
+				                clear.appendTo(field);
+				                return field;
+				              },
+				              render: function(){
+				                return this.wrapper.html();
+				              }
+				            });
+				            el.init();
+				            return el.render();
+				          }
+				        });
+				      },
+			        cityOnClick: function(point){
+			          this.city = point.properties.city;
+			          this.displayDialog();
+			        },
+			        getParams: function(){
+			          var params = {};
+			          if(this.city != null){
+			            $.extend(params, {
+			              country_id: this.country.id,
+			              city_id: this.city.id
+			            });
+			          }
+			          return params;
+			        },
+			        displayDialog: function(){
+			          var params = this.getParams();
+			          var url = this.config.dialog.url;
+			          this.dialog = this.root.fmx.dialog({
+			            width: 540,
+			            height: 260,
+			            params: params,
+			            url: url
+			          });			          
+			        },
+				      getGeojson: function(json, val){
+				        var geo = {};
+				        $.extend(geo, {
+				          geometry: {
+				            type: 'Point',
+				            coordinates: [json.lat, json.lon]
+				          },
+				          properties: {
+				            name: json.city,
+				            city: val
+				          },
+				          type: 'Feature',
+				          id: json.city
+				        });
+				        return geo;
+				      },
+              success: function(){
+                var _self = this;
+                var data = this.getDataSeries();
+                var cities = this.getCities();
+                var series = [data, cities];
+                this.chart.destroy();
+                this.container.highcharts('Map',
+                  $.extend({
+                    title: '',
+				            tooltip: {
+				              backgroundColor: '#000000',
+				              borderWidth: 0,
+				              useHTML: true,
+				              style: {
+				                color: '#FFFFFF',
+				                padding: '18px'
+				              },
+				              formatter: function(){
+				                return this.point.getTooltip();
+				              }
+				            },
+                    series: series
+                  }, this.parent.config.opts)
+                );
+                this.showBtn();
+                this.loaded();
+              },
+              showBtn: function(){
+                this.parent.showBtn();
+              }
+            });
+          el.init();
+        }
+      },
+      getData: function(){
+        var _self = this;
+        var data = [];
+        if(this.countries == null){
+          $.each($.highcharts_countries, function(key, val){
+            var el = _self.getElement(key, val);
+            if(el.country != null) data.push(el);
+          });
+          this.countries = data;
+        }
+        return this.countries;
+      },
+			getElement: function(key, path){
+				var element = {};
+				$.extend(element, {
+					parent: this,
+					key: key,
+					path: path,
+					country: null,
+					y: null,
+					name: null,
+					drilldown: null,
+					_tooltip: null,
+					init: function(){
+						this.initCountry();
+					},
+					initDrilldown: function(){
+					  this.drilldown = this.key;
+					},
+					initCountry: function(){
+						var countries = this.parent.data;
+						this.country = countries[this.key];
+						if(this.country != null){
+							this.initY();
+							this.initDrilldown();
+							this.initName();
+							this.initPath();
+						}
+					},
+					getTooltip: function(){
+						if(this._tooltip == null){
+							var s = '<b>' + this.name + '</b>(' + this.y + ')';
+							$.each(this.country.map_cities, function(key, city){
+								s += '<br />' + city.name;
+							});
+							this._tooltip = s;
+						}
+						return this._tooltip;
+					},
+					initPath: function(){
+						this.path = this.path;
+					},
+					initName: function(){
+						this.name = this.country.name;
+					},
+					initY: function(){
+						this.y = this.country.map_cities.length;
+					}
+				});
+				element.init();
+				return element;
+			}
+    });
+    app.splash.map.init();
+  });
+})(jQuery);

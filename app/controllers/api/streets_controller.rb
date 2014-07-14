@@ -3,6 +3,7 @@ class Api::StreetsController < Api::ApiController
   include Api::Kmable
   
   before_filter :assert_km, only: [:chart, :map]
+  before_filter :assert_kms, only: [:distribution]
   
   # POST /api/streets/chart
   def chart
@@ -15,6 +16,8 @@ class Api::StreetsController < Api::ApiController
     render json: { contents: self.km.api_map_streets }
   end
   
-  
+  def distribution
+    render json: { contents: Api::StreetData.api_lanes_bays_distribution(@kms) }
+  end
   
 end

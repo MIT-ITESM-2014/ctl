@@ -1,0 +1,43 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.shops = {};
+    $.extend(el,{
+      parent: app.stats.charts,    
+      init: function(){
+        var base = this.parent.getChart('shops');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts,{
+          title: {
+            text: local.title
+          },
+          subtitle: {
+            text: local.subtitle
+          },
+          yAxis: {
+            title: {
+              text: local.y_axis
+            }
+          }
+        });
+      },
+      setData: function(){
+        $.extend(this.opts,{
+          series: [{
+            name: 'Kms',
+            colorByPoint: true,
+            data: this.data.series
+          }],
+          drilldown: {
+            series: this.data.drilldown
+          }
+        });
+      }
+    });
+    el.init();    
+  });
+})(jQuery);

@@ -1,0 +1,37 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.obstruction_sources = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart('obstruction_sources');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts,{
+          title: {
+            text: local.title
+          },
+          subtitle: {
+            text: local.subtitle
+          },
+          credits: {
+            text: local.credits
+          },
+          xAxis: {
+            categories: this.getXAxis()
+          }
+        });
+      },
+      setData: function(){
+        $.extend(this.opts,{
+          series: this.data.chart
+        });
+      }
+    });
+    el.init();    
+  });
+})(jQuery);

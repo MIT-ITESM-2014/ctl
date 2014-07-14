@@ -1,0 +1,179 @@
+/*
+  View: stats 
+  Object: slider
+  Elements: charts
+  Custom jQuery plugin to render chart slider
+ */
+(function(){
+  $(function(){
+    var el = app.stats.slider = {};
+    $.extend(el,{
+      parent: app.stats,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      container: null,
+      slides: [],
+      navigation: {},
+      active: null,
+      rendered: false,
+      not_found: null,
+      ready_count: 0,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        //this.initConfig();
+        this.initLang();
+        this.initNavigation();
+        this.initContainer();
+        this.initNotFound();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+        this.loading();
+      },
+      initView: function(){
+        this.view = this.parent.view;
+      },
+      initConfig: function(){
+        this.config = this.parent.config.slider;
+      },
+      initLang: function(){
+        this.lang = this.parent.lang.slider;
+      },
+      initContainer: function(){
+        this.container = this.view.container.find('#stats_slider');
+      },
+      initNavigation: function(){
+        /*
+          Navigation buttons
+         */
+        $.extend(this.navigation, {
+          parent: this,
+          root: this.root,
+          view: this.view,
+          prev_btn: null,
+          next_btn: null,
+          width: null,
+          init: function(){
+            this.initPrevBtn();
+            this.initNextBtn();
+          },
+          initPrevBtn: function(){
+            var _self = this;
+            this.prev_btn = this.view.container.find('#stats_prev_btn');
+            this.width = this.prev_btn.width();
+            this.root.click(this.prev_btn, function(e, container){
+              _self.prevBtnOnClick();
+            });
+          },
+          prevBtnOnClick: function(){
+            var active = this.parent.active;
+            if(active.index > 0){
+              var slide = this.parent.slides[active.index - 1];
+              this.parent.setActive(slide);
+            }
+          },
+          initNextBtn: function(){
+            var _self = this;
+            this.next_btn = this.view.container.find('#stats_next_btn');
+            this.root.click(this.next_btn, function(e, container){
+              _self.nextBtnOnClick();
+            });
+          },
+          nextBtnOnClick: function(){
+            var active = this.parent.active;
+            var index = active.index;
+            if((index + 1) < this.parent.slides.length){
+              var slide = this.parent.slides[index + 1];
+              this.parent.setActive(slide);
+            }
+          },
+          update: function(){
+            this.enable();
+            var index = this.parent.active.index;
+            if(index == 0){
+              this.prev_btn.addClass('disabled');
+            }
+            if((index + 1) == this.parent.slides.length){
+              this.next_btn.addClass('disabled');
+            }
+          },
+          enable: function(){
+            this.prev_btn.removeClass('disabled');
+            this.next_btn.removeClass('disabled');
+          },
+          render: function(){
+            this.prev_btn.css('display', 'block');
+            this.next_btn.css('display', 'block');
+          }
+        });
+        this.navigation.init();
+      },
+      setActive: function(slide){
+        if(slide != this.active){
+          if(this.active != null){
+            this.active.abort();
+          }
+          this.active = slide;
+          this.navigation.update();
+          this.active._render();
+        }
+      },
+      initNotFound: function(){
+        this.not_found = $('<div id="stats_slider_not_found"></div>');
+        this.not_found.html(this.lang.labels.not_found);
+        this.not_found.css('display', 'none');
+        this.not_found.appendTo(this.container);
+      },
+      addSlide: function(opts){
+        var slide = {};
+        $.extend(slide, {
+          slider: this,
+          index: this.slides.length,
+          container: null,
+          append: function(){
+            this.container.addClass('stats_slider_slide');
+            this.container.appendTo(this.slider.container);
+          },
+          render: function(){
+            this.container.css('display', 'block');
+          },
+          abort: function(){
+            this.container.css('display', 'none');
+          }
+        }, opts);
+        if(slide.container != null){
+          slide.getData(); // Function call here for needed context
+          slide.append();
+          this.slides.push(slide);
+        }
+      },
+      loading: function(){
+        this.root.loading();
+      },
+      loaded: function(){
+        this.root.loaded();
+      },
+      render: function(){
+        if(!this.rendered){
+          if(this.slides.length == 0){
+            this.root.loaded();
+            this.not_found.css('display', 'block');
+            this.rendered = true;
+          }else{
+            ++this.ready_count;
+            if(this.ready_count == this.slides.length){
+              this.navigation.render();
+              this.setActive(this.slides[0]);
+              this.loaded();
+              this.rendered = true;           
+            }
+          }
+        }
+      }
+    });
+    el.init();
+  });
+})(jQuery);

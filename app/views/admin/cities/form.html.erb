@@ -6,7 +6,7 @@
 <%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
 	<fieldset>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.name')  %></label>
+			<label><%= t('app.admin.views.cities.fields.name') %></label>
 			<div class="field_container">
 				<%= f.text_field :name %>
 			</div>
@@ -20,12 +20,12 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.location')  %></label>
+			<label><%= t('app.admin.views.cities.fields.location') %></label>
 			<div class="field_container" id="cities_coordinates_selector"></div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.language_id')  %></label>
+			<label><%= t('app.admin.views.cities.fields.language_id') %></label>
 			<div class="field_container">
 				<%= f.select :language_id, Admin::Language.select_list, prompt: true %>
 			</div>
@@ -39,35 +39,42 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.population_density')  %></label>
+			<label><%= t('app.admin.views.cities.fields.population_density') %></label>
 			<div class="field_container">
 				<%= f.text_field :population_density %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.area')  %></label>
+			<label><%= t('app.admin.views.cities.fields.future_population') %></label>
+			<div class="field_container">
+				<%= f.text_field :future_population %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.cities.fields.area') %></label>
 			<div class="field_container">
 				<%= f.text_field :area %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.us_exchange_rate')  %></label>
+			<label><%= t('app.admin.views.cities.fields.us_exchange_rate') %></label>
 			<div class="field_container">
 				<%= f.text_field :us_exchange_rate %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.gdp')  %></label>
+			<label><%= t('app.admin.views.cities.fields.gdp') %></label>
 			<div class="field_container">
 				<%= f.text_field :gdp %>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.cities.fields.big_mac_index')  %></label>
+			<label><%= t('app.admin.views.cities.fields.big_mac_index') %></label>
 			<div class="field_container">
 				<%= f.text_field :big_mac_index %>
 			</div>

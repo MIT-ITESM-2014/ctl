@@ -7,14 +7,88 @@
     position: absolute;
 		width: 100%;
 		height: 100%;
-		border: 1px solid #000000;
+		&.split_two{
+		  width: 50%;
+		  height: 100%;
+    }
+    &.split_four{
+		  width: 50%;
+	  	height: 50%;
+    }
   }
-  .compare_map.split_two{
-		width: 50%;
-		height: 100%;
+  .compare_map_label{
+    position: absolute;
+    top: 40px;
+    left: 250px;
+    z-index: 4000;
+    color: $white;
+    padding: 10px 20px 10px 20px;
+    @include background-gradient($from-base, $to-base);
   }
-  .compare_map.split_four{
-		width: 50%;
-		height: 50%;
+  #compare_panel_container{
+    position: absolute;
+    #compare_panel{
+      width: 500px;
+      height: 450px;
+      @include bg-color($white);
+      @include box-shadow(-1px, 1px, 3px, #BBBBBB);
+      &.split_two{
+        height: 150px;
+      }
+      #compare_panel_stats_btn{
+        display: block;
+        text-align: center;
+      }
+      .compare_panel_section{
+        float: left;
+        width: 249px;
+        height: 225px;
+        font-weight: $light;
+        font-size: 12px;
+      }
+      .compare_panel_section_title{
+        font-size: 20px;
+        text-align: center;
+        margin: 4px 0 4px 0;
+      }
+      .compare_panel_section_subtitle{
+        font-size: 15px;
+        text-align: center;
+      }
+      .compare_panel_content_icon{
+        position: relative;
+        display: block;
+      }
+      .compare_panel_content_datablock{
+        float: left;
+        margin: 0 14px 0 0;
+      }
+      $border-color: $black;
+      #compare_panel_section0{
+        border-right: 1px solid $border-color;
+      }
+      #compare_panel_section2{
+        border-top: 1px solid $border-color;
+        border-right: 1px solid $border-color;
+      }
+      #compare_panel_section3{
+        border-top: 1px solid $border-color;
+      }
+      .compare_panel_content{
+        padding: 6px 5px 6px 25px;
+        .compare_panel_content_icon{
+          float: left;
+        }
+        .compare_panel_content_data{
+          float: left;
+          margin: 12px 0 0 8px;
+        }
+        &.uff_ucf{
+          .compare_panel_content_icon{
+            margin: 12px 0 0 0;
+          }
+        }
+      }
+    }
   }
 }

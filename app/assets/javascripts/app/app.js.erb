@@ -84,19 +84,22 @@ $.extend(app, {
 			this.main_loader.show();
 		}
 		++this.loading_count;
-    },
-    loaded: function(){
+  },
+  loaded: function(){
 		--this.loading_count;
 		if(this.loading_count == 0){
 			this.main_loader.hide();
 		}
-    },
-    error: function(){
+  },
+  error: function(){
 		this.root.fmx.notification({
 			icon_src: 'error',
 			msg: lang.messages.error
 		});
-    },
+  },
+  relocate: function(url){
+    window.location.href = url;
+  },
 	initRoot: function(){
 		this.root = this;
 	},
@@ -111,6 +114,11 @@ $.extend(app, {
 	},
 	fmx: {
 		root: null,
+		overlay: function(opts){
+			return $.fmx_overlay(
+				$.extend(opts, config.fmx.overlay())
+			);
+		},
 		dialog: function(opts){
 			return $.fmx_dialog(
 				$.extend(opts, config.fmx.dialog())

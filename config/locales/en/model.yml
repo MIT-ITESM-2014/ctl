@@ -11,6 +11,48 @@ en:
           friday: 'Friday'
           saturday: 'Saturday'
     model:
+      api:
+        shop_total:
+          shop_type:
+            grocery: 'Grocery'
+            convinience: 'Convinience'
+            clothing: 'Clothing'
+            food_drink: 'Food and Drink'
+            other: 'Other Retail'
+        km:
+          categories:
+            general: 'General'
+            shops: 'Shops'
+            traffic: 'Traffic'
+            roads_and_regulations: 'Roads and Regulations'
+            disruptive_violations: 'Disruptive Violations'
+            delivery_tracking: 'Delivery Tracking'
+            fields:
+              country: 'Country'
+              city: 'City'
+              area_type: 'Area Type'
+              shop_inventory: 'Shop Inventory'
+              top_shop_types: 'Top 3 Shop Types'
+              speed: 'Speed'
+              traffic_count: 'Traffic Count'
+              top_vehicle_type: 'Top 3 Vehicle/ Pedestrian Usage'
+              ucf: 'UCF'
+              uff: 'UFF'
+              public_bays: 'Public Loading/Unloading Bays'
+              private_bays: 'Private Loading/Unloading Bays'
+              one_way_streets: '% of One Way Streets'
+              two_way_streets: '% of Two Way Streets'
+              disruptions_peak_week: 'Disruptions during peak hour in week'
+              disruptions_peak_hour: 'Peak disruption hour'
+              disruption_average: 'Average disruptions per hour'
+              top_disruption_type: 'Top 3 main sources of disruption'
+              delivery_peak_week: 'Deliveries during peak hour in a week'
+              deliveries_peak_hour: 'Average deliveries per hour'
+              delivery_hour: 'Peak delivery hour'
+              delivery_average_duration: 'Average deliveries duration'
+              delivery_equipment_percentage: '% of deliveries made with equipment'
+              delivery_no_equipment_percentage: '% of deliveries made without equipment'
+              top_delivery_type: 'Top 3 delivery vehicle'
       user:
         perm:
           users: 'Users'

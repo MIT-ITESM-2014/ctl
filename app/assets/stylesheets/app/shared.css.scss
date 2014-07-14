@@ -1,9 +1,15 @@
 @import '../shared.css.scss';
 $font-family: 'Open Sans', Arial, sans-serif;
-$semi-bold: 400;
-$bold: 600;
+$light: 300;
+$normal: 400;
+$semi-bold: 600;
+$bold: $semi-bold;
+$width: 1024px;
 $from-base: #36B1F9;
 $to-base: #1370A8;
 $to-hover: #0E5B8A;
 $header-base: #1B5A94;
 $header-base-hover: #124A75;
+$white: #FFFFFF;
+$black: #000000;
+$view-padding: 50px;

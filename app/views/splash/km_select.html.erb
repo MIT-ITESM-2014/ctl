@@ -1,0 +1,20 @@
+<%= javascript_include_tag 'app/views/km_select' %>
+<% l_base = 'app.views.splash.km_select.form' %>
+<div id="km_select_dialog">
+  <div id="km_select_dialog_city"><%= @city.name %></div>
+  <div id="km_select_dialog_country"><%= @country.name %></div>
+  <%= form_for :km, url: '', html: { id: 'km_select_dialog_form' } do |f| %>
+    <fieldset>
+				<div class="field">
+					<div class="field_container">
+					  <%= select_tag 'km', options_from_collection_for_select(@city.active_kms_filter, 'id', 'name'), prompt: t("#{l_base}.fields.km.prompt"), id: 'km_field_select' %>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="form_actions">
+					<%= submit_tag t("#{l_base}.actions.go"), id: 'km_select_dialog_form_submit', class: 'button' %>
+					<div class="clear"></div>
+				</div>    
+    </fieldset>
+  <% end %>
+</div>

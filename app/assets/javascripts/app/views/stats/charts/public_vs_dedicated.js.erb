@@ -1,0 +1,90 @@
+(function(){
+  $(function(){
+    var el = app.stats.charts.public_vs_dedicated = {};
+    $.extend(el,{
+      parent: app.stats.charts,
+      init: function(){
+        var base = this.parent.getChart('public_vs_dedicated');
+        $.extend(base, this);
+        $.extend(this, base);
+        this.initSlide();
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts, {
+          title: {
+            text: local.title
+          },
+          xAxis: {
+            categories: this.getXAxis()
+          },
+          yAxis: [{ // Primary yAxis
+            labels: {
+              style: {
+                color: Highcharts.getOptions().colors[1]
+              }
+            },
+            title: {
+              text: local.y_axis,
+              style: {
+                color: Highcharts.getOptions().colors[1]
+              }
+            }
+          }, { // Secondary yAxis
+            title: {
+              text: local.y_axis_2,
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
+            },
+            labels: {
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
+            },
+            opposite: true
+          }]
+        });
+      },
+      getMeters: function(){
+        var meters = this.data.meters;
+        var series = [];
+        series.push({
+          name: 'Public Meter Length',
+          type: 'column',
+          yAxis: 1,
+          data: meters.public_length
+        });
+        series.push({
+          name: 'Dedicated Meter Length',
+          type: 'column',
+          yAxis: 1,
+          data: meters.dedicated_length
+        });
+        return series;
+      },
+      getBays: function(series){
+        var bays = this.data.bays;
+        series.push({
+          type: 'spline',
+          name: 'Public Bays',
+          data: bays.public_bays
+        });
+        series.push({
+          type: 'spline',
+          name: 'Private Bays',
+          data: bays.private_bays        
+        });
+        return series;
+      },
+      setData: function(){
+        var meters = this.getMeters();
+        var series = this.getBays(meters);
+        $.extend(this.opts,{
+          series: series
+        });
+      }
+    });
+    el.init();
+  });
+})(jQuery);

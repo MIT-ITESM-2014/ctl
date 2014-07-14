@@ -1,0 +1,25 @@
+<% content_for :head do %>
+	<%= stylesheet_link_tag 'app/views/splash_v2' %>
+	<%= javascript_include_tag 'app/views/splash_v2' %>
+<% end %>
+<% l_base = 'app.views.splash' %>
+<div id="splash" class="center_column">
+  <h1 id="splash_title">
+    <%= t "#{l_base}.title" %>
+  </h1>
+  <h2 class="splash_subtitle">
+    <p>
+      <%= t "#{l_base}.subtitle" %>
+    </p>
+    <p>
+      <%= t "#{l_base}.subtitle2" %>
+    </p>  
+  </h2>
+  <div id="splash_actions">
+    <a id="splash_about" class="button" href="<%= url_for controller: :about, action: :index %>">
+      <%= t "#{l_base}.actions.learn_more" %>
+    </a>    
+    <div class="clear"></div>
+  </div>
+  <div id="splash_map"></div>
+</div>

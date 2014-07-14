@@ -8,10 +8,8 @@ class TrafficDisruption < ActiveRecord::FmxBase
   include Durable
   
   module AffectionType
-    
     Slowed = 'S'
     Stopped = 'C'
-    
     List = {
       Slowed => {
         name: I18n.t('app.model.traffic_disruption.affection_type.slowed')
@@ -28,7 +26,6 @@ class TrafficDisruption < ActiveRecord::FmxBase
   end
   
   module DisruptionType
-    
     PedestrianSidewalk = 'P'
     Bus = 'B'
     ParkingViolation = 'V'
@@ -67,8 +64,7 @@ class TrafficDisruption < ActiveRecord::FmxBase
     
   end
   
-  module Source
-    
+  module Source  
     Freight = 'F'
     Utility = 'U'
     Waste = 'W'
@@ -77,31 +73,39 @@ class TrafficDisruption < ActiveRecord::FmxBase
     Pedestrian = 'P'
     Accident = 'A'
     Bus = 'B'
-    
+    # Visible added for stats display
     List = {
       Freight => {
-        name: I18n.t('app.model.traffic_disruption.source.freight')
+        name: I18n.t('app.model.traffic_disruption.source.freight'),
+        visible: true
       },
       Utility => {
-        name: I18n.t('app.model.traffic_disruption.source.utility')
+        name: I18n.t('app.model.traffic_disruption.source.utility'),
+        visible: false
       },
       Waste => {
-        name: I18n.t('app.model.traffic_disruption.source.waste')
+        name: I18n.t('app.model.traffic_disruption.source.waste'),
+        visible: false
       },
       Taxi => {
-        name: I18n.t('app.model.traffic_disruption.source.taxi')
+        name: I18n.t('app.model.traffic_disruption.source.taxi'),
+        visible: true
       },
       Car => {
-        name: I18n.t('app.model.traffic_disruption.source.car')
+        name: I18n.t('app.model.traffic_disruption.source.car'),
+        visible: true
       },
       Pedestrian => {
-        name: I18n.t('app.model.traffic_disruption.source.pedestrian')
+        name: I18n.t('app.model.traffic_disruption.source.pedestrian'),
+        visible: true
       },
       Accident => {
-        name: I18n.t('app.model.traffic_disruption.source.accident')
+        name: I18n.t('app.model.traffic_disruption.source.accident'),
+        visible: false
       },
       Bus => {
-        name: I18n.t('app.model.traffic_disruption.source.bus')
+        name: I18n.t('app.model.traffic_disruption.source.bus'),
+        visible: false
       }
     }
     
@@ -142,6 +146,8 @@ class TrafficDisruption < ActiveRecord::FmxBase
   scope :base_count, ->{ select("COUNT(traffic_disruptions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_length_type, ->(length_type){ where(length_type: length_type) }
+  scope :filter_by_source, ->(source){ where(source: source) }
+  scope :with_delivery, ->{ where("traffic_disruptions.delivery_key IS NOT NULL AND traffic_disruptions.delivery_key != ''") }
   scope :with_location, ->{ where('traffic_disruptions.lat IS NOT NULL AND traffic_disruptions.lng IS NOT NULL') }
   
   attr_protected :length_type
@@ -242,6 +248,5 @@ class TrafficDisruption < ActiveRecord::FmxBase
       self.length_type = val
     end
   end
-  
-  
+
 end

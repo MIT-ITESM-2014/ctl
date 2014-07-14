@@ -164,7 +164,6 @@
 					root: null,
 					view: null,
 					dialog: null,
-					dialog_select: null, // 2014
 					init: function(){
 						this.initRoot();
 						this.initView();
@@ -231,49 +230,12 @@
 					      var actions = [];
 					      var params = this.getKmValues(this.parent.parent.parent.km);
 					      this.dialog = null;
-	              var submit_btn = this.root.fmx.dialog_action({
-	                name: 'Submit',
-	                containerOnClick: function(e, element, instance){
-	                  _self.submitBtnOnClick(e, element, instance);
-	                }
-	              });
-	              actions.push(submit_btn);
 					      this.dialog = this.root.fmx.dialog({
 					        url: '/kms/select',
 					        params: params,
-					        height: 600,
-					        actions: actions
+					        width: 420,
+					        height: 420
 					      });
-					    },
-					    submitBtnOnClick: function(e, element, instance){
-					      var filters = this.parent.dialog_select.filters;
-					      var link = this.getCompareLink(filters);
-					      if(link == null){
-					        //TODO launch warning no filters selected
-					      }else{
-					        console.log(link);
-					        this.dialog.close();
-					        this.dialog = null;
-					        window.location.href = link;
-					      }
-					    },
-					    getCompareLink: function(data){
-                var link = null;
-				        var link_base = unescape(config.server.paths.compare) + '?';
-					      var length = data.length;
-					      var res = [];
-					      for(var i = 0; (i < length) && i < 4; ++i){
-					        var km = data[i].km;
-					        if(km != null){
-					          res.push(encodeURIComponent('km['+ i + ']') + '=' + encodeURIComponent(km.id));
-					          //res.push(km.id);
-					          //if(i < (length - 1)) res.push('vs');
-					        }
-					      }
-					      if(res.length > 0){
-					        link = link_base + res.join('&');
-					      }
-					      return link;
 					    }
 					  });
 					  compare_btn.init();

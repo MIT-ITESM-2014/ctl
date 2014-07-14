@@ -1,0 +1,36 @@
+(function(){
+  $(function(){
+    app.splash = {};
+    $.extend(app.splash, {
+      parent: app,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      container: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initContainer();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this;
+      },
+      initConfig: function(){
+        this.config = config.views.splash;
+      },
+      initLang: function(){
+        this.lang = lang.views.splash;
+      },
+      initContainer: function(){
+        this.container = this.root.wrapper.find('#splash');
+      }
+    });
+    app.splash.init();
+  });
+})(jQuery);

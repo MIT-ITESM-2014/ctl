@@ -931,7 +931,7 @@
 									initContainer: function(){
 										this.container = $('<div class="km_panel_element_actions"></div>');
 										if(this.element.hasMapDisplay()) this.initMapAction();
-										this.initChartAction();
+										if(this.element.hasChartDisplay()) this.initChartAction();
 										this.container.append('<div class="clear"></div>');
 										this.container.appendTo(this.parent.container);
 									},

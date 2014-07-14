@@ -1,5 +1,6 @@
 $.app_display_types = {};
 $.extend($.app_display_types, {
+  none: 0,
 	chart: 1,
 	map: 2
 });
@@ -46,6 +47,7 @@ $.extend(config, {
 					chart: '<%= url_for controller: 'api/streets', action: :chart %>',
 					map: '<%= url_for controller: 'api/streets', action: :map %>'
 				},
+				uff_ucf: {},
 				deliveries: {
 					chart: '<%= url_for controller: 'api/deliveries', action: :chart %>',
 					map: '<%= url_for controller: 'api/deliveries', action: :map %>'
@@ -66,7 +68,8 @@ $.extend(config, {
 			home: '<%= url_for controller: :home, action: :index %>',
 			km: '<%= url_for controller: :kms, action: :index %>',
 			show: '<%= url_for controller: :kms, action: :show, country: '%{country}', city: '%{city}', km: '%{km}', only_path: false %>',
-		  compare: '<%= compare_path %>'
+		  compare: '<%= compare_path %>',
+		  stats: '<%= stats_path %>'
 		}
 	},
 	ui: {
@@ -90,7 +93,322 @@ $.extend(config, {
 		}
 	},
 	views: {
+	  splash: {
+			map: {
+			  drilldown: {
+			    url: 'http://code.highcharts.com/mapdata/',
+			    dialog: {
+			      url: '<%= url_for controller: :splash, action: :km_select %>'
+			    }
+			  },
+				valueRanges: [
+					{
+						to: 0,
+						color: '#EFEFEF'
+					},
+					{
+						from: 1,
+						to: 1,
+						color: '#8492A5'
+					},
+					{
+						from: 2,
+						to: 2,
+						color: '#617794'
+					},
+					{
+						from: 3,
+						color: '#103362'
+					}
+				],
+				opts: {
+				  drilldown: {
+				    activeDataLabelStyle: {
+				      color: 'white',
+				      textDecoration: 'none'
+				    },
+				    drillUpButton: {
+				      relativeTo: 'spacingBox',
+				      position: {
+				        x: 0,
+				        y: 60
+				      }
+				    }
+				  },
+				  plotOptions: {},
+					mapNavigation: {
+					  enabled: true,
+					  buttonOptions: {
+					    verticalAlign: 'bottom'
+					  }
+					},
+					credits: {
+						enabled: false
+					},
+					legend: {
+						enabled: false
+					}
+				}
+			}
+	  },
+	  stats: {
+	    /*
+	      New charts in slider require settings for config.
+	     */
+	    charts: {
+	      shops: {
+	        url: '<%= url_for controller: 'api/shops', action: :inventory %>',
+          chart: {
+	          chart: {
+	            type: 'column'
+	          },
+	          credits: {
+	            enabled: false
+	          },
+            xAxis: {
+                type: 'category',
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                  text: 'Shops'
+              }
+            },
+            legend: {
+              enabled: false
+            },
+            plotOptions: {
+              series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                }
+              }
+            },
+            tooltip: {
+              enabled: false
+            }
+	        }
+	      },
+	      obstruction_sources: {
+	        url: '<%= url_for controller: 'api/traffic_disruptions', action: :sources %>',
+	        chart: {
+            chart: {
+                type: 'area'
+            },
+            xAxis: {
+              tickmarkPlacement: 'on',
+              title: {
+                text:'km2'
+              }
+            },
+            yAxis: {
+              title: {
+                text: 'Percent'
+              }
+            },
+            tooltip: {
+              pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y:,.0f} observed obstructions)<br/>',
+              shared: true
+            },
+            plotOptions: {
+              area: {
+                stacking: 'percent',
+                lineColor: '#FFFFFF',
+                lineWidth: 1,
+                marker: {
+                  lineWidth: 1,
+                  lineColor: '#FFFFFF'
+                }
+              }
+            },        
+	        }
+	      },
+	      delivery_intensity: {
+	        url: '<%= url_for controller: 'api/deliveries', action: :intensity %>',
+	        chart: {
+	           chart: {
+              type: 'heatmap',
+              marginTop: 60,
+              marginBottom: 60
+            },
+            credits: {
+              enabled: true
+            },
+            colorAxis: {
+              min: 0
+            },
+            legend: {
+              align: 'right',
+              layout: 'vertical',
+              margin: 0,
+              verticalAlign: 'top',
+              y: 25,
+              symbolHeight: 320
+            },
+            plotOptions: {
+              heatmap: {
+                borderWidth: 1,
+                dataLabels: {
+                  enabled: false,
+                  color: 'black',
+                  style: {
+                    textShadow: 'none'
+                  }
+                }              
+              }
+            }
+	        }
+	      },
+	      deliveries_disruptions: {
+	        url: '<%= url_for controller: 'api/traffic_disruptions', action: :deliveries %>',
+	        chart: {
+            chart: {
+              type: 'column'
+            },
+            credits: {
+              enabled: true
+            },
+            yAxis: {
+              min: 0
+            },
+            tooltip: {
+              headerFormat: '<span style="font-size:20px"><b>{point.key}</span><table><br/> ',
+              pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<b>({point.percentage:.1f}%)</b><br/>',
+              valueSuffix: '',
+              shared: true
+            },
+            plotOptions: {
+              column: {
+                stacking: 'percent'
+              }
+            }   
+	        }
+	      },
+	      parking: {
+	        url: '<%= url_for controller: 'api/streets', action: :distribution %>',
+	        chart: {
+	          credits: {
+	            enabled: false
+	          },
+	          tooltip: {
+	            pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>',
+              shared: true
+            },
+            plotOptions: {
+              column: {
+                stacking: 'percent'
+              }
+            },
+            labels: {
+              items: [{
+                html: '',
+                style: {
+                  right: '50px',
+                  top: '18px',
+                  color: 'black'
+                }
+              }]
+            }
+	        }
+	      },
+	      public_vs_dedicated: {
+	        url: '<%= url_for controller: 'api/kms', action: :parking %>',
+	        chart: {
+            chart: {
+              zoomType: 'xy'
+            },
+            credits: {
+              enabled: false
+            },
+            plotOptions: {
+              column: {
+                stacking: 'normal'
+              }
+            },
+            tooltip: {
+              headerFormat: '<span style="font-size:20px"><b>{point.key}</span><table><br/> ',
+              pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} <b> ({point.percentage:.1f} %)</b><br/>',
+              valueSuffix: '',       
+              shared: true
+            },
+            legend: {
+              layout: 'vertical',
+              align: 'left',
+              x: 120,
+              y: 100,
+              verticalAlign: 'top',
+              floating: true,
+              backgroundColor: '#FFFFFF'
+            }    
+	        }
+	      },
+	      observed_vehicle: {
+	        url: '<%= url_for controller: 'api/traffic_counts', action: :vehicles %>',
+	        chart: {
+	          chart: {
+	            type: 'area'
+	          },
+	          tooltip: {
+              pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y:,.0f} observed obstructions)<br/>',
+              shared: true
+            },
+            plotOptions: {
+              area: {
+                stacking: 'percent',
+                lineColor: '#ffffff',
+                lineWidth: 1,
+                marker: {
+                  lineWidth: 1,
+                  lineColor: '#ffffff'
+                }
+              }
+            }
+	        }
+	      },
+	      lanes: {
+	        url: '<%= url_for controller: 'api/kms', action: :lanes %>',
+	        chart: {
+	          chart: {
+	            type: 'bar'
+	          },
+            credits: {
+              enabled: false
+            },
+            yAxis: {
+              min: 0
+            },
+            legend: {
+              reversed: true
+            },
+            plotOptions: {
+              series: {
+                stacking: 'percent'
+              }
+            },
+            tooltip: {
+              pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
+            }
+	        }
+	      }
+	    }
+	  },
 	  compare: {
+	    panel: {
+	      panel: {
+	        section: {
+						shops: {
+						  icon: '<%= image_url 'app/icons/km/panel/logo/main/shops.png' %>'
+						},
+						loading: {
+						  icon: '<%= image_url 'app/icons/km/panel/logo/main/loading.png' %>'
+						},
+						uff_ucf: {
+						  icon: '<%= image_url 'app/icons/km/panel/logo/main/uff_ucf.png' %>'
+						}
+	        }
+	      }
+	    },
 			map: {
 				map: {
 					lat: 42.35704390000001,
@@ -103,12 +421,29 @@ $.extend(config, {
 				},
 				layers: {
 				  heat: {
-				    url: '<%= url_for controller: 'api/shops', action: :heat %>'   
+				    url: '<%= url_for controller: 'api/shops', action: :heat %>',
+				    gradient: [
+              'rgba(0,255,0,0)',
+              'rgba(0,255,0,1)',
+              'rgba(255,255,0,1)',
+              'rgba(255,0,0,1)'
+            ],
+            radius: 40,
+            opacity: null,
+            max_intensity: 250
 				  }
 				}
 			}
 	  },
 		km: {
+		  select: {
+		    filters: 4,
+				icons: {
+					country: '<%= image_url 'app/icons/dropdown/country.png' %>',
+					city: '<%= image_url 'app/icons/dropdown/city.png' %>',
+					km2: '<%= image_url 'app/icons/dropdown/km2.png' %>'
+				}
+		  },
 			share: {
 				embed: {
 					base: '<iframe width="960" height="600" src="%{url}" frameborder="0" allowfullscreen></iframe>'
@@ -124,11 +459,21 @@ $.extend(config, {
 				},
 				shops: {},
 				loading: {},
-				deliveries: {},
+				uff_ucf: {
+				  display_type: $.app_display_types.none
+				},
+				speed: {
+				  display_type: $.app_display_types.none
+				},
+				deliveries: {
+				  display_type: $.app_display_types.chart
+				},
 				traffic_counts: {
 					display_type: $.app_display_types.chart
 				},
-				traffic_disruptions: {}
+				traffic_disruptions: {
+				  display_type: $.app_display_types.chart
+				}
 			},
 			map: {
 				map: {
@@ -174,6 +519,8 @@ $.extend(config, {
 							}
 						}
 					},
+					uff_ucf: {},
+					speed: {},
 					deliveries: {
 						colors: {
 							D: '#e2bd2f', 
@@ -273,6 +620,8 @@ $.extend(config, {
 				            }
 						}
 					},
+					uff_ucf: {},
+					speed: {},
 					deliveries: {
 						days: <%= DeliveryTotal::Day::List.to_json.html_safe %>,
 						labels: {
@@ -312,7 +661,7 @@ $.extend(config, {
 				}
 			},
 			panel: {
-				col_capacity: 3,
+				col_capacity: 2,
 				header: {
 					max_length: {
 						title: 28
@@ -333,9 +682,11 @@ $.extend(config, {
 					main: {
 						shops: '<%= image_url 'app/icons/km/panel/logo/main/shops.png' %>',
 						loading: '<%= image_url 'app/icons/km/panel/logo/main/loading.png' %>',
+						uff_ucf: '<%= image_url 'app/icons/km/panel/logo/main/uff_ucf.png' %>',
 						deliveries: '<%= image_url 'app/icons/km/panel/logo/main/deliveries.png' %>',
 						traffic_counts: '<%= image_url 'app/icons/km/panel/logo/main/traffic_counts.png' %>',
-						traffic_disruptions: '<%= image_url 'app/icons/km/panel/logo/main/traffic_disruptions.png' %>'
+						traffic_disruptions: '<%= image_url 'app/icons/km/panel/logo/main/traffic_disruptions.png' %>',
+						speed: '<%= image_url 'app/icons/km/panel/logo/main/speed.png' %>'
 					},
 					small: {
 						shops: '<%= image_url 'app/icons/km/panel/logo/small/shops.png' %>',
@@ -401,6 +752,13 @@ $.extend(config, {
 	},
 	fmx: {
 		parent: null,
+		overlay: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.overlay());
+			return opts;
+		},
 		dialog: function(){
 			var opts = {};
 			$.extend(opts, {
