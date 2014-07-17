@@ -8,7 +8,7 @@ class Country < ActiveRecord::FmxBase
     Height = 18
   end
   
-  scope :base, ->{ select("countries.id, countries.city_count, countries.name, countries.gini, countries.slug, countries.extension") }
+  scope :base, ->{ select("countries.id, countries.city_count, countries.name, countries.gini, countries.slug, countries.abbreviation, countries.extension") }
   scope :base_count, ->{ select("COUNT(countries.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :with_cities, ->{ joins('JOIN cities ON cities.country_id = countries.id') }
@@ -21,6 +21,7 @@ class Country < ActiveRecord::FmxBase
   validates :name, length: { in: 2..100 }, uniqueness: true
   validates :slug, uniqueness: true, allow_nil: true
   validates :gini, length: { in: 2..100 },  allow_nil: true # added 2014
+  validates :abbreviation, length: { in: 1..10 }, allow_nil: true # added 2014
   
   def active_cities
     @active_cities ||= self.cities.filter_active

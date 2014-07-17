@@ -6,7 +6,7 @@ ALTER TABLE countries
 ;
 
 ALTER TABLE cities
-  ADD COLUMN future_population INTEGER
+  ADD COLUMN future_population INTEGER DEFAULT 0
 ;
 
 ALTER TABLE kms

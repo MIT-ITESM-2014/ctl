@@ -33,6 +33,10 @@ class KmsController < FrontController
     self.get_location
   end
   
+  def select_action
+    
+  end
+  
   protected
   
   def assert_kms
