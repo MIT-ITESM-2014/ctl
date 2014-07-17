@@ -135,6 +135,8 @@ en:
             speed: 'Speed'
             uff: 'UFF'
             ucf: 'UCF'
+            one_way_streets: 'One Way Streets'
+            two_way_streets: 'Two Way Streets'
             area_type: 'Area Type'
             description: 'Description'
             comments: 'Comments'

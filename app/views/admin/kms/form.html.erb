@@ -51,6 +51,20 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.one_way_streets') %></label>
+			<div class="field_container">
+				<%= f.text_field :one_way_streets %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.two_way_streets') %></label>
+			<div class="field_container">
+				<%= f.text_field :two_way_streets %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
 			<label><%= t('app.admin.views.kms.fields.area_type') %></label>
 			<div class="field_container">
 				<%= f.text_field :area_type %>
