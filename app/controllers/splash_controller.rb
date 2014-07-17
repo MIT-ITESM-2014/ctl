@@ -1,5 +1,6 @@
 class SplashController < FrontController
   
+  before_filter :assert_ajax_post, only: [:km_select]
   before_filter :page_elements, only: [:index, :test]
   before_filter :assert_country, only: [:km_select]
   before_filter :assert_city, only: [:km_select]
@@ -9,11 +10,12 @@ class SplashController < FrontController
   end
   
   def test
-    render layout: 'application'
+    render_404
+    #render layout: 'application'
   end
   
   def km_select
-    
+     
   end
   
   protected

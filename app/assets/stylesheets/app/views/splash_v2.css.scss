@@ -1,23 +1,20 @@
 @import 'app/shared.css.scss';
-#wrapper{
-  @include bg-color($white);
-}
 #splash{
   height: 100%;
   font-weight: $light;
   text-align: center;
-  padding: 0 0 50px 0;
+  padding: 0 50px;
   h1{
-    margin: 44px 0 38px 0;
+    margin: 20px 0 35px 0;
     font-size: 62px;
   }
   h2{
-    p{
-      margin: 0 0 15px 0;
-    }
     width: 788px;
     font-size: 18px;
     margin: 0 auto 28px auto;
+    p{
+      margin: 0 0 15px 0;
+    }
   }
   @include link('a#splash_about'){
 	  display: block;

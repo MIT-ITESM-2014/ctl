@@ -1,5 +1,6 @@
 class KmsController < FrontController
   
+  before_filter :assert_ajax_post, only: [:select]
   before_filter :assert_km, only: [:show, :show_action, :select]
   before_filter :assert_kms, only: [:compare, :stats]
   before_filter :page_elements, only: [:show]
@@ -10,10 +11,6 @@ class KmsController < FrontController
   
   def show_action
     self.set_display
-  end
-  
-  def test
-    render layout: 'application'
   end
   
   def stats

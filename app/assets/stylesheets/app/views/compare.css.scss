@@ -36,7 +36,7 @@
       @include bg-color($white);
       @include box-shadow(-1px, 1px, 3px, #BBBBBB);
       &.split_two{
-        height: 150px;
+        height: 225px;
       }
       @include link('a#compare_panel_stats_btn'){
         display: block;
