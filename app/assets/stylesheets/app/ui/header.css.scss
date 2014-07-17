@@ -23,6 +23,12 @@
 	  font-size: 11px;
 	  padding: 8px 16px 8px 16px;
 	}
+	@include link('a#header_panel_btn'){
+	  float: left;
+	  margin: 2px 0 0 0;
+	  font-size: 11px;
+	  padding: 8px 16px 8px 16px;
+	}
 	.header_search_bar{
 		@include border-radius(3px, 3px, 3px, 3px);
 		background: none repeat scroll 0 0 $header-base;

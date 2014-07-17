@@ -53,6 +53,19 @@
           left: left
         }); 
       },
+      toggle: function(){
+        if(this.panel.hidden){
+          this.show();
+        }else{
+          this.hide();
+        }
+      },
+      show: function(){
+        this.panel.show();
+      },
+      hide: function(){
+        this.panel.hide();
+      },
       initPanel: function(){
         this.panel = {};
         $.extend(this.panel, {
@@ -60,22 +73,24 @@
           root: this.root,
           view: this.view,
           contianer: null,
+          header: null,
           content: null,
           config: this.config.panel,
           lang: this.lang.panel,
           hidden: false,
           kms: this.view.kms,
           data_kms: [],
+          stats_btn: null,
           init: function(){
             this.initContainer();
           },
           hide: function(){
             this.hidden = true;
-            this.container.css('opacity', 0);
+            this.container.css('display', 'none');
           },
           show: function(){
             this.hidden = false;
-            this.container.css(opacity, 0);
+            this.container.css('display', 'block');
           },
           initContainer: function(){
             this.container = $('<div id="compare_panel"></div>');
@@ -85,6 +100,38 @@
             this.initContent();
             this.initStatBtn();
             this.container.appendTo(this.parent.container);
+          },
+          initHeader: function(){
+            this.header = {};
+            $.extend(this.header, {
+              parent: this,
+              root: this.root,
+              lang: this.lang.header,
+              config: this.config.header,
+              container: null,
+              init: function(){
+                this.initContainer();
+              },
+              initContainer: function(){
+                this.container = $('<div id="compare_panel_header"></div>');
+                this.initToggleBtn();
+                this.container.append('<div class="clear"></div>');
+                this.container.appendTo(this.parent.container);
+              },
+              initToggleBtn: function(){
+                var _self = this;
+                this.toggle_btn = $('<a href="#" id="compare_panel_header_toggle">X</a>');           
+                this.toggle_btn.appendTo(this.container);
+                this.root.click(this.toggle_btn, function(){
+                  _self.toggleBtnOnClick();  
+                });
+              },
+              toggleBtnOnClick: function(){
+                this.parent.hide();
+                //this.parent.content.hide();
+              }
+            });
+            this.header.init();
           },
           initContent: function(){
             this.content = {};
@@ -115,6 +162,12 @@
                 this.initData();
                 this.container.append('<div class="clear"></div>');
                 this.container.appendTo(this.parent.container);
+              },
+              show: function(){
+                this.container.css('display', 'block');
+              },
+              hide: function(){
+                this.container.css('display', 'none');
               },
               initData: function(){
                 var length = this.kms.length;
@@ -391,7 +444,7 @@
 	            link = link_base + res.join('&');
 	          }
 	          return link;
-	        },
+	        }
         });
         this.panel.init();
       }

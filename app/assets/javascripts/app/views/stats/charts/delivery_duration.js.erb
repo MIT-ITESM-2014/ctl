@@ -1,90 +1,54 @@
 (function(){
   $(function(){
-    var el = app.stats.charts.example = {};
+    var el = app.stats.charts.delivery_duration = {};
     $.extend(el,{
       parent: app.stats.charts,
       init: function(){
-        var base = this.parent.getChart();
+        var base = this.parent.getChart('delivery_duration');
         $.extend(base, this);
         $.extend(this, base);
-        this.initChart();
-        this.ready();
+        this.initSlide();
       },
-      initChart: function(){
-        this.container.attr('id','example');
+      setLang: function(){
+        var local = this.lang.chart;
+        $.extend(this.opts, {
+          title: {
+            text: local.title
+          },
+          subtitle: {
+            text: local.subtitle
+          },
+          credits: {
+            text: local.credits
+          },
+          yAxis: {
+            //min: -20,
+            title: {
+              text: local.y_axis
+            }
+          },
+          xAxis: {
+            categories: this.getXAxis(),
+            lineWidth: 0,
+            title: {
+              text: local.x_axis
+            }
+          }
+        });
       },
-      render: function(){
-        this.container.css('display', 'block');
-        var opts = {
-	    chart: {
-	        type: 'boxplot'
-	    },
-	    
-	    title: {
-	        text: 'Delivery Duration '
-	    },
-	    subtitle: {
-	        text: '(Minutes)'
-	    },
-
-	    credits: {
-                text: 'Chart depicts information about deliveries during data collection process for a week of observation', 
-                enabled: true
-            },
-	    
-	    legend: {
-	        enabled: false
-	    },
-	
-	    xAxis: {
-	        categories: ['JTAR','Zocalo','Pinheiros','Correa'],
-	        title: {
-	            text: 'Km2'
-	        },
-            lineWidth: 0
-	    },
-	    
-	    yAxis: {
-            min: -20,
-	        title: {
-	            text: 'Delivery Duration in Minutes'
-	        } 
-	    },
-
-	    plotOptions: {
-	    	boxplot: {
-	    		fillColor: '#F0F0E0',
-	    		lineWidth: 1,
-	    		medianColor: '#0C5DA5',
-	    		medianWidth: 2,
-	    		stemColor: '#A63400',
-	    		stemDashStyle: 'dot',
-	    		stemWidth: 1,
-	    		whiskerColor: '#3D9200',
-	    		whiskerLength: '20%',
-	    		whiskerWidth: 2 
-	    	}
-	    },
-	
-	    series: [{
-	        name: 'Delivery Duration',
-                tooltip: {
-                    pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
-                    },
-	        data: [
-	            [0,4,7,15,85],
-	            [0,3,8,20,180],
-	            [0,5,9,15,78],
-	            [0,0,0,1,60],
-
-
-	        ]
-	    }]
-        };
-        this.container.highcharts(opts);
-      },
-      ready: function(){
-        this.view.slider.addSlide(this);
+      setData: function(){
+        console.log(this.data);
+        $.extend(this.opts, {
+          series: [{
+            name: 'Delivery Duration',
+            data: this.data.data,
+            marker: {
+	            fillColor: 'white',
+	            lineWidth: 1,
+	            lineColor: Highcharts.getOptions().colors[0]
+	          }
+          }]
+        });
       }
     });
     el.init();

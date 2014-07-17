@@ -1,7 +1,7 @@
 class Api::KmsController < Api::ApiController
   
   before_filter :assert_post, only: [:show]
-  before_filter :assert_kms, only:[:lanes, :parking]
+  before_filter :assert_kms, only:[:lanes, :parking, :deliveries]
   
   # POST /api/kms/show
   def show
@@ -14,12 +14,19 @@ class Api::KmsController < Api::ApiController
     end
   end
   
+  # POST /api/kms/lanes
   def lanes
     render json: { contents: self.cls.api_lanes(@kms) }
   end
   
+  # POST /api/kms/parking
   def parking
     render json: { contents: self.cls.api_parking(@kms) }
+  end
+  
+  # POST /api/kms/deliveries
+  def deliveries
+    render json: { contents: self.cls.api_deliveries(@kms) }
   end
   
   protected

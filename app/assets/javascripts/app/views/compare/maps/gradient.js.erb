@@ -1,0 +1,57 @@
+(function(){
+  $(function(){
+    var el = app.compare.maps.gradient = {};
+    $.extend(el, {
+      parent: app.compare.maps,
+      root: null,
+      view: null,
+      lang: null,
+      config: null,
+      container: null,
+      data: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initContainer();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent.view;
+      },
+      initConfig: function(){
+        this.config = this.view.config.map.gradient;
+      },
+      initContainer: function(){
+        this.container = $('<div id="compare_map_gradient"></div>');
+        this.initData();
+        this.initColor();
+        this.container.appendTo(this.view.container);
+      },
+      initData: function(){
+        this.data = $('<div id="compare_map_gradient_data"></div>');
+        this.initMinValue();
+        this.initMaxValue();
+        this.data.append('<div class="clear"></div>');
+        this.data.appendTo(this.container);
+      },
+      initMinValue: function(){
+        var min_val = $('<div id="compare_map_gradient_min"></div>');
+        min_val.html(this.config.min_value);
+        min_val.appendTo(this.data);
+      },
+      initMaxValue: function(){
+        var min_val = $('<div id="compare_map_gradient_max"></div>');
+        min_val.html(this.config.max_value);
+        min_val.appendTo(this.data);      
+      },
+      initColor: function(){
+        var color = $('<div id="compare_map_gradient_color"></div>');
+        color.appendTo(this.container);
+      }
+    });
+    el.init();
+  });
+})(jQuery);

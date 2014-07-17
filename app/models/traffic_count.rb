@@ -48,6 +48,14 @@ class TrafficCount < ActiveRecord::FmxBase
     write_attribute(:ended_at, date_time_val(val))
   end
   
+  def get_stats_by_method(method_sym)
+    result = nil
+    if method_sym.kind_of?(Symbol) && self.respond_to?(method_sym)
+      result = self.send(method_sym)
+    end
+    result
+  end
+  
   protected
   
   def set_total
@@ -57,6 +65,5 @@ class TrafficCount < ActiveRecord::FmxBase
   def self.peak_field
     "started_at"
   end
-  
   
 end

@@ -9,8 +9,7 @@ class Delivery < ActiveRecord::FmxBase
   module DeliveryType
     Delivery = 'D'
     Pickup = 'P'
-    Both = 'B'
-    
+    Both = 'B'   
     List = {
       Delivery => {
         name: I18n.t('app.model.delivery.delivery_type.delivery')
@@ -27,6 +26,62 @@ class Delivery < ActiveRecord::FmxBase
       @@keys ||= List.keys
     end
     
+  end
+  
+  module VehicleType
+    LBase = 'app.model.delivery.vehicle_type'
+    Car = 0
+    Van = 1
+    RigidTruck = 2
+    Bike = 3
+    ArticulatedTruck = 4
+    Motorbike = 5
+    Pedestrian = 6
+    PickupTruck = 7
+    Taxi = 8
+    Other = 9
+    List = {
+      Car => {
+        name: I18n.t("#{LBase}.car"),
+        value: 'Car'
+      },
+      Van => {
+        name: I18n.t("#{LBase}.van"),
+        value: 'Van'
+      },
+      RigidTruck => {
+        name: I18n.t("#{LBase}.rigid_truck"),
+        value: 'Rigid Truck'
+      },
+      Bike => {
+        name: I18n.t("#{LBase}.bike"),
+        value: 'Bike' 
+      },
+      ArticulatedTruck => {
+        name: I18n.t("#{LBase}.articulated_truck"),
+        value: 'Articulated Truck' 
+      },
+      Motorbike => {
+        name: I18n.t("#{LBase}.motorbike"),
+        value: 'Motorbike' 
+      },
+      Pedestrian => {
+        name: I18n.t("#{LBase}.pedestrian"),
+        value: 'Pedestrian' 
+      },
+      PickupTruck => {
+        name: I18n.t("#{LBase}.pickup_truck"),
+        value: 'Pickup Truck' 
+      },
+      Taxi => {
+        name: I18n.t("#{LBase}.taxi"),
+        value: 'Taxi' 
+      },
+      Other => {
+        name: I18n.t("#{LBase}.other"),
+        value: 'Other' 
+      }
+    }
   end
   
   scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.delivery_key, deliveries.street_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.distance_to_shop, deliveries.is_out_of_segment, deliveries.shops_served, deliveries.notes, deliveries.lat, deliveries.lng") }
@@ -147,6 +202,5 @@ class Delivery < ActiveRecord::FmxBase
   def self.peak_field
     "started_at"
   end
-  
   
 end

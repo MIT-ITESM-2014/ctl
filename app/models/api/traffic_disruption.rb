@@ -1,5 +1,7 @@
 class Api::TrafficDisruption < TrafficDisruption
   
+  Top = 3
+  
   module Json
     Default = {}
     Map = {
@@ -11,6 +13,8 @@ class Api::TrafficDisruption < TrafficDisruption
   scope :api_map_base, ->{ select('traffic_disruptions.vehicles_affected, traffic_disruptions.source, traffic_disruptions.lat, traffic_disruptions.lng, traffic_disruptions.started_at, traffic_disruptions.ended_at').with_location }
   scope :source_count_by_km, ->(km, source){ base_count.filter_by_km(km).filter_by_source(source) }
   scope :delivery_count_by_km, ->(km){ base_count.filter_by_km(km).with_delivery }
+  scope :count_by_km, ->(km_id){ base_count.filter_by_km(km_id) }
+  scope :api_count_per_source_by_km, ->(km_id){ select('traffic_disruptions.source').count_by_km(km_id).group('traffic_disruptions.source').order('NUM DESC') }
   
   def self.map_data(km_id, length_type)
     self.api_map_base.filter_by_km(km_id).filter_by_length_type(length_type)
@@ -44,6 +48,10 @@ class Api::TrafficDisruption < TrafficDisruption
     end
     Api::Km.json_display = Api::Km::Json::Obstruction
     result
+  end
+  
+  def self.api_top_sources(km_id)
+    self.api_count_per_source_by_km(km_id).first(Top)
   end
   
 end

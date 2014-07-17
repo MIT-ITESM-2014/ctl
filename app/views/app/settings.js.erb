@@ -227,13 +227,17 @@ $.extend(config, {
 	      delivery_intensity: {
 	        url: '<%= url_for controller: 'api/deliveries', action: :intensity %>',
 	        chart: {
-	           chart: {
-              type: 'heatmap',
-              marginTop: 60,
-              marginBottom: 60
-            },
-            credits: {
-              enabled: true
+            plotOptions: {
+              heatmap: {
+                borderWidth: 1,
+                dataLabels: {
+                  enabled: false,
+                  color: 'black',
+                  style: {
+                    textShadow: 'none'
+                  }
+                } 
+              }
             },
             colorAxis: {
               min: 0
@@ -245,19 +249,69 @@ $.extend(config, {
               verticalAlign: 'top',
               y: 25,
               symbolHeight: 320
-            },
+            }
+	        },
+	        second_chart: {
             plotOptions: {
-              heatmap: {
-                borderWidth: 1,
+              line: {
                 dataLabels: {
-                  enabled: false,
-                  color: 'black',
-                  style: {
-                    textShadow: 'none'
-                  }
-                }              
+                  enabled: false
+                },
+                enableMouseTracking: true
+              }
+            },
+            tooltip: {
+              formatter: function () {
+                  return '<b>' + this.y + '</b> Deliveries <br><b>';
               }
             }
+	        }
+	      },
+	      peak_delivery: {
+	        url: '<%= url_for controller: 'api/deliveries', action: :peak %>',
+	        chart: {
+	          labels: {
+              items: [{
+                html: '',
+                style: {
+                  right: '50px',
+                  top: '18px',
+                  color: 'black'
+                }
+              }]
+            },
+            tooltip: {
+              pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
+            }
+	        }
+	      },
+	      deliveries: {
+	        url: '<%= url_for controller: 'api/kms', action: :deliveries %>',
+	        chart: {
+            chart: {
+              type: 'column'
+            },
+            xAxis: {
+              type: 'category',
+              title: {
+                text: ''
+              }
+            },
+            legend: {
+              enabled: false
+            },
+            tooltip: {
+                enabled: false
+            },
+            plotOptions: {
+              series: {
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: true,
+                  floating: true
+                }
+              }
+            }                   
 	        }
 	      },
 	      deliveries_disruptions: {
@@ -343,7 +397,7 @@ $.extend(config, {
             }    
 	        }
 	      },
-	      observed_vehicle: {
+	      observed_vehicles: {
 	        url: '<%= url_for controller: 'api/traffic_counts', action: :vehicles %>',
 	        chart: {
 	          chart: {
@@ -390,10 +444,43 @@ $.extend(config, {
               pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}<br/>', 
             }
 	        }
+	      },
+	      delivery_duration: {
+	        url: '<%= url_for controller: 'api/deliveries', action: :duration %>',
+	        chart: {
+            chart: {
+              type: 'boxplot'
+            },
+	          legend: {
+	            enabled: false
+	          },
+	          plotOptions: {
+	          	boxplot: {
+	          		fillColor: '#F0F0E0',
+	          		lineWidth: 1,
+	          		medianColor: '#0C5DA5',
+	          		medianWidth: 2,
+	          		stemColor: '#A63400',
+	          		stemDashStyle: 'dot',
+	          		stemWidth: 1,
+	          		whiskerColor: '#3D9200',
+	          		whiskerLength: '20%',
+	          		whiskerWidth: 2,
+                tooltip: {
+                  headerFormat: '<b>{point.key}<table><b/><br/> ',
+            	    pointFormat: '<span style="color:{series.color}">\u25CF</span> <b> {series.name}: </b><br/> Maximum: {point.y}<br/> Upper Cuartile: {point.q3}<br/>Median: {point.median}<br/>Lower Quartile: {point.q1}<br/>Minimum:0 <br/>',
+                  shared: false
+                }
+	          	}
+	          }
+	        }
 	      }
 	    }
 	  },
 	  compare: {
+		  header: {
+		    left: {}
+		  },
 	    panel: {
 	      panel: {
 	        section: {
@@ -410,6 +497,11 @@ $.extend(config, {
 	      }
 	    },
 			map: {
+	      gradient: {
+	        colors: [],
+	        min_value: 1,
+	        max_value: 500
+	      },
 				map: {
 					lat: 42.35704390000001,
 					lng: -71.09286029999998,
@@ -428,9 +520,9 @@ $.extend(config, {
               'rgba(255,255,0,1)',
               'rgba(255,0,0,1)'
             ],
-            radius: 40,
+            radius: 50,
             opacity: null,
-            max_intensity: 250
+            max_intensity: 500
 				  }
 				}
 			}
@@ -602,23 +694,23 @@ $.extend(config, {
 									cursor: 'pointer',
 									dataLabels: {
 										enabled: false
-				                    },
+				          },
 									showInLegend: true
-				                }
-				            }
+				        }
+				      }
 						}
 					},
 					loading: {
-						opts: {
-							chart: {
-								type: 'column'
+					  opts: {
+						  chart: {
+							  type: 'column'
 							},
 							plotOptions: {
-								column: {
-									stacking: 'normal'
-				                }
-				            }
-						}
+							  column: {
+								  stacking: 'normal'
+				        }
+				      }
+				    }
 					},
 					uff_ucf: {},
 					speed: {},

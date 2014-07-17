@@ -1,37 +1,174 @@
 (function(){
   $(function(){
+    /*
+      Drilldown simulation, with drilldown event.
+      Unable to drilldown across heatmap to line types.
+      
+      TODO later version check if native drilldown support across
+           heatmap to line charts
+     */
     var el = app.stats.charts.delivery_intensity = {};
     $.extend(el,{
       parent: app.stats.charts,
+      charts: [],
       init: function(){
         var base = this.parent.getChart('delivery_intensity');
         $.extend(base, this);
         $.extend(this, base);
         this.initSlide();
       },
-      initChart: function(){
-        this.container.attr('id','example');
-      },
       getToolTip: function(){
         return '<b>' + this.point.value + '</b> observed deliveries at <br><b>'+ this.series.xAxis.categories[this.point.x]  + '</b> in <br><b>' + this.series.yAxis.categories[this.point.y] + '</b>';        
       },
-      render: function(){
-        this.container.css('display', 'block');
-        var opts = {
-
-          series: [{
-              name: 'Average Number of Deliveries',
-              data: [[0,0,0],[1,0,2.2],[2,0,7.4],[3,0,11.2],[4,0,12],[5,0,6],[6,0,4.2],[7,0,6.8],[8,0,5.6],[9,0,4.2],[10,0,2.6]
-              ,[0,1,0.4],[1,1,3.6],[2,1,7],[3,1,6.8],[4,1,4.8],[5,1,1.2],[6,1,2.4],[7,1,1],[8,1,1.2],[9,1,0.8],[10,1,0]
-              ,[0,2,3],[1,2,6.2],[2,2,9.2],[3,2,11.4],[4,2,10.8],[5,2,6.2],[6,2,8.6],[7,2,8.6],[8,2,4.2],[9,2,0.8],[10,2,0]
-              ,[0,3,6.6],[1,3,9],[2,3,9.4],[3,3,7.4],[4,3,18.4],[5,3,4],[6,3,0],[7,3,0],[8,3,0],[9,3,0],[10,3,0]],
-
-          }]
-        };
-        this.container.highcharts(opts);
+      setConfig: function(){
+        var _self = this;      
+        $.extend(this.opts, {
+          chart: {
+            type: 'line',
+            events: {
+              drilldown: function(e){
+                _self.chartDrilldown(e, this);
+              }
+            }
+          }
+        }, this.config.chart);
       },
-      ready: function(){
-        this.view.slider.addSlide(this);
+      chartDrilldown: function(e, chart){
+        console.log('drilldown');
+        console.log(e);
+        var series = [{
+                type: 'line',
+                name: 'Average Deliveries per Hour',
+                data: [2.2,7.4,11.2,12,6,4.2,6.8,5.6,4.2,2.6],
+                
+                tooltip: {
+                    pointFormat: '<span style="color:{series.color}">\u25CF</span>', 
+                    },
+            }, {
+                name: 'Average Deliveries During Peak Period',
+                data: [6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2],
+                tooltip: {
+                    pointFormat: '<span style="color:{series.color}">\u25CF</span>', 
+                    },
+            }];
+        //chart.addSeriesAsDrilldown(e.point, series);
+        chart.destroy();
+        this.container.highcharts({
+          series: series
+        });
+      },
+      secondChart: function(){
+        var el = {};
+        $.extend(el, {
+          parent: this,
+          config: this.config.second_chart,
+          lang: this.lang.second_chart,
+          opts: {},
+          data: {},
+          back_btn: null,
+          init: function(){
+            this.setConfig();
+            this.setLang();
+          },
+          initBackBtn: function(){
+            this.back_btn = $('<a href="#" id="delivery_intensity_back_btn" class="button">Back</a>');
+            this.back_btn.appendTo(this.parent.container);
+          },
+          setConfig: function(){
+            $.extend(this.opts, this.config);
+          },
+          setLang: function(){
+            var local = this.lang;
+            $.extend(this.opts, {
+              subtitle: {
+                text: local.subtitle
+              },
+              credits: {
+                text: local.credits
+              },
+              xAxis: {
+                title: {
+                  text: local.x_axis
+                }
+              },
+              yAxis: {
+                title: {
+                  text: local.y_axis
+                }
+              }
+            });
+          },
+          setData: function(){
+            $.extend(this.opts, this.data);
+          },
+          render: function(){
+            this.setData();
+            this.parent.container.highcharts(this.opts);
+          }
+        });
+        el.init();
+        return el;
+      },
+      setLang: function(){
+        var local = this.lang.chart;
+        var _self = this;
+        $.extend(this.opts,{
+          title: {
+            text: local.title
+          },
+          subtitle: {
+            text: local.subtitle
+          },
+          credits: {
+            text: local.credits
+          },
+          yAxis: {
+            categories: this.getXAxis()
+          }
+        });
+      },
+      getPoint: function(data){
+        var el = {};
+        $.extend(el, {
+          data: data,
+          parent: this,
+          x: null, 
+          y: null,
+          value: null,
+          //id: null,
+          drilldown: true,
+          init: function(){
+            this.initData();
+            this.initDrilldown();
+          },
+          initData: function(){
+            this.x = this.data[0];
+            this.y = this.data[1];
+            this.value = this.data[2];
+          },
+          initDrilldown: function(){
+            console.log(this.parent.data.kms[this.x].id);
+            this.drilldown = this.parent.data.kms[this.x].id;
+          }
+        });
+        el.init();
+        return el;
+      },
+      setData: function(){
+        var _self = this;
+        var data = [];
+        $.each(this.data.data, function(k,v){
+          var tmp = _self.getPoint(v);
+          data.push(tmp);
+        });
+        $.extend(this.opts,{
+          series: [{
+            type: 'heatmap',
+            name: 'Average Number of Deliveries',
+            borderWidth: 1,
+            data: data
+          }]
+        });
       }
     });
     el.init();

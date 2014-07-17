@@ -25,17 +25,20 @@
     padding: 10px 20px 10px 20px;
     @include background-gradient($from-base, $to-base);
   }
+  $panel-width: 500px;
+  $panel-height: 450px;
   #compare_panel_container{
     position: absolute;
+    font-weight: $light;
     #compare_panel{
-      width: 500px;
-      height: 450px;
+      width: $panel-width;
+      height: $panel-height;
       @include bg-color($white);
       @include box-shadow(-1px, 1px, 3px, #BBBBBB);
       &.split_two{
         height: 150px;
       }
-      #compare_panel_stats_btn{
+      @include link('a#compare_panel_stats_btn'){
         display: block;
         text-align: center;
       }
@@ -89,6 +92,36 @@
           }
         }
       }
+    }
+  }
+  #compare_map_gradient{
+    position: absolute;
+    display: block;
+    width: 150px;
+    padding: 2px;
+    z-index: 4500;
+    font-weight: $light;
+    font-size: 13px;
+    right: 12px;
+    bottom: 14px;
+    @include bg-color($white);
+    @include box-shadow(-1px, 1px, 3px, #BBBBBB);
+    #compare_map_gradient_min{
+      float: left;
+    }
+    #compare_map_gradient_max{
+      float: right;
+    }
+    #compare_map_gradient_color{
+      display: block;
+      height: 12px;
+      background: -moz-linear-gradient(left, #00ff00 0%, #ffff00 49%, #ff0000 100%);
+      background: -webkit-gradient(left top, right top, color-stop(0%, #00ff00), color-stop(49%, #ffff00), color-stop(100%, #ff0000));
+      background: -webkit-linear-gradient(left, #00ff00 0%, #ffff00 49%, #ff0000 100%);
+      background: -o-linear-gradient(left, #00ff00 0%, #ffff00 49%, #ff0000 100%);
+      background: -ms-linear-gradient(left, #00ff00 0%, #ffff00 49%, #ff0000 100%);
+      background: linear-gradient(to right, #00ff00 0%, #ffff00 49%, #ff0000 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ff00', endColorstr='#ff0000', GradientType=1 );
     }
   }
 }

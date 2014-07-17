@@ -72,7 +72,7 @@ class Api::ShopTotal < ShopTotal
     end
     result = {
       name: km.name,
-      id: km.name.downcase,
+      id: "#{km.name.downcase}_#{km.id}",
       data: data
     }
     result

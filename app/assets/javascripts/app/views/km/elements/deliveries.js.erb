@@ -4,6 +4,7 @@
 		$.extend(el, {
 			parent: app.km.elements,
 			data_key: 'peak_deliveries',
+			second_data_key: 's_peak_delivery_hour',
 			init: function(){
 				var base = this.parent.getElement('deliveries');
 				$.extend(base, this);
@@ -221,8 +222,28 @@
 			},
 			initPanel: function(){
 				$.extend(this.panel, {
+				  second_stat: null,
 					init: function(){
 						this.initContainer();
+						this.initSecondStat();
+						this.initSecondUnit();
+					},
+					initSecondStat: function(){
+						this.second_stat = $('<div class="km_panel_element_stat"></div>');
+						this.second_stat.addClass('second');
+						this.second_stat.html(100);
+						this.second_stat.appendTo(this.container);
+					},
+					updateSecondStat: function(){
+						var data = this.view.km[this.element.second_data_key];
+						this.second_stat.html(data);
+					},
+					initSecondUnit: function(){
+						var label = this.element.lang.second_units;
+						var unit = $('<div class="km_panel_element_unit"></div>');
+						unit.addClass('second');
+						unit.html(label);
+						unit.appendTo(this.container);
 					},
 					appendTo: function(panel){
 						this.panel = panel;
@@ -230,7 +251,11 @@
 					},
 					initContainer: function(){
 						this.container.addClass('small');
-					}
+					},
+					update: function(){
+					  this.updateStat();
+					  this.updateSecondStat();
+				  }
 				});
 				this.panel.init();
 			}

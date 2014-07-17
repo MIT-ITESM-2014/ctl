@@ -412,6 +412,14 @@
 		      top: 32px;
 		    }
 		  }
+		  &.deliveries{
+        .km_panel_element_stat, .km_panel_element_unit{
+					left: 30px;
+					&.second{
+						left: 90px;
+					}
+				}
+		  }
 		}
 		.km_panel_element_title{
 			color: #444444;

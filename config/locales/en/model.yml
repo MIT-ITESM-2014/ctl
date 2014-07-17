@@ -12,6 +12,18 @@ en:
           saturday: 'Saturday'
     model:
       api:
+        traffic_count:
+          field:
+            cars: 'Cars'
+            taxis: 'Taxis'
+            pickup_trucks: 'Pickup Trucks'
+            articulated_trucks: 'Articulated Trucks'
+            rigid_trucks: 'Rigid Trucks'
+            vans: 'Vans'
+            buses: 'Buses'
+            bikes: 'Bikes'
+            motorbikes: 'Motor Bikes'
+            pedestrians: 'Pedestrians'
         shop_total:
           shop_type:
             grocery: 'Grocery'
@@ -40,18 +52,16 @@ en:
               uff: 'UFF'
               public_bays: 'Public Loading/Unloading Bays'
               private_bays: 'Private Loading/Unloading Bays'
-              one_way_streets: '% of One Way Streets'
-              two_way_streets: '% of Two Way Streets'
-              disruptions_peak_week: 'Disruptions during peak hour in week'
+              one_way_streets: 'Number of One Way Streets'
+              two_way_streets: 'Number of Two Way Streets'
+              disruptions_peak_week: 'Obstructions during peak hour in week'
               disruptions_peak_hour: 'Peak disruption hour'
-              disruption_average: 'Average disruptions per hour'
+              disruption_average: 'Average obstructions per hour'
               top_disruption_type: 'Top 3 main sources of disruption'
               delivery_peak_week: 'Deliveries during peak hour in a week'
               deliveries_peak_hour: 'Average deliveries per hour'
               delivery_hour: 'Peak delivery hour'
               delivery_average_duration: 'Average deliveries duration'
-              delivery_equipment_percentage: '% of deliveries made with equipment'
-              delivery_no_equipment_percentage: '% of deliveries made without equipment'
               top_delivery_type: 'Top 3 delivery vehicle'
       user:
         perm:

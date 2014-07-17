@@ -1,0 +1,73 @@
+(function(){
+  $(function(){
+    var el = app.compare.header = {};
+    $.extend(el,{
+      parent: app.compare,
+      root: null,
+      view: null,
+      config: null,
+      lang: null,
+      container: null,
+      left: null,
+      init: function(){
+        this.initRoot();
+        this.initView();
+        this.initConfig();
+        this.initLang();
+        this.initContainer();
+        this.initLeft();
+      },
+      initRoot: function(){
+        this.root = this.parent.root;
+      },
+      initView: function(){
+        this.view = this.parent;
+      },
+      initLang: function(){
+        this.lang = this.parent.lang.header;
+      },
+      initConfig: function(){
+        this.config = this.parent.config.header;
+      },
+      initContainer: function(){
+        this.container = this.root.container.find('#header');
+        console.log(this.container);
+      },
+      initLeft: function(){
+        this.left = {};
+        $.extend(this.left, {
+          parent: this,
+          root: this.root,
+          view: this.view,
+          config: this.config.left,
+          lang: this.lang.left,
+          container: null,
+          init: function(){
+            this.initContainer();
+          },
+          initContainer: function(){
+            this.container = $('<div id="header_left_container"></div>');
+            this.initElements();
+            this.container.appendTo(this.parent.container);
+          },
+          initElements: function(){
+            this.initPanelBtn();
+          },
+          initPanelBtn: function(){
+            var _self = this;
+            var panel_btn = $('<a id="header_panel_btn" href="#" class="button">PANEL</a>');
+            panel_btn.appendTo(this.container);
+            this.root.click(panel_btn, function(e, container){
+              _self.panelBtnOnClick();
+            });
+          },
+          panelBtnOnClick: function(){
+            this.view.panel.toggle();
+          }
+        });
+        this.left.init();
+      }
+    });
+    el.init();
+  });
+})(jQuery);

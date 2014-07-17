@@ -1,5 +1,7 @@
 class Api::Km < Km
   
+  WeekHours = 40
+  
   module Json
     Default = {}
     List = {
@@ -8,7 +10,7 @@ class Api::Km < Km
     }
     Show = {
       only: [:id, :name, :description, :shops_count, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_disruptions, :peak_traffic, :max_deliveries, :lat, :lng, :street_lat, :street_lng, :ucf, :uff, :speed],
-      methods: [:full_name, :full_slug, :utc_offset]
+      methods: [:full_name, :full_slug, :utc_offset, :s_peak_delivery_hour]
     }
     Stats = {
       only: [:id, :name, :description, :shops_count, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_disruptions, :peak_traffic, :max_deliveries, :lat, :lng, :street_lat, :street_lng, :ucf, :uff, :speed, :area_type],
@@ -56,8 +58,8 @@ class Api::Km < Km
       DeliveryPeakHour = 1
       DeliveryAverage = 2
       DeliveryAverageDuration = 3
-      DeliveryEquipmentPercentage = 4
-      DeliveryNoEquipmentPercentage = 5
+      DeliveryEquipmentPercentage = 4 # Eliminated
+      DeliveryNoEquipmentPercentage = 5 # Eliminated
       TopDeliveryType = 6
     end
     List = {
@@ -177,14 +179,6 @@ class Api::Km < Km
             name: I18n.t("#{LBase}.fields.delivery_average_duration"),
             method: :delivery_average_duration
           },
-          Fields::DeliveryEquipmentPercentage => {
-            name: I18n.t("#{LBase}.fields.delivery_equipment_percentage"),
-            method: :delivery_equipment_percentage
-          },
-          Fields::DeliveryNoEquipmentPercentage => {
-            name: I18n.t("#{LBase}.fields.delivery_no_equipment_percentage"),
-            method: :delivery_no_equipment_percentage
-          },
           Fields::TopDeliveryType => {
             name: I18n.t("#{LBase}.fields.top_delivery_type"),
             method: :top_delivery_type
@@ -214,6 +208,10 @@ class Api::Km < Km
     @@json_display = val
   end
   
+  def full_slug
+    @full_slug ||= "#{self[:country_slug]}/#{self[:city_slug]}/#{self.slug}"
+  end
+  
   def as_json(opts = {})
     super(opts.merge(self.class.json_display))
   end
@@ -234,8 +232,18 @@ class Api::Km < Km
     self.list_base.filter_by_country_slug(country_slug).filter_by_city_slug(city_slug).filter_by_slug(slug).first
   end
   
-  def full_slug
-    @full_slug ||= "#{self[:country_slug]}/#{self[:city_slug]}/#{self.slug}"
+  def top_delivery_type
+    map = Api::Delivery.api_top_vehicles(self.id).map do |el|
+      el.vehicle_type
+    end
+    map.join(', ')
+  end
+  
+  def top_shop_types
+    map = Api::Shop.api_top_shop_types(self.id).map do |el|
+      Api::Shop::ShopType::List[el.shop_type][:name]
+    end
+    map.join(', ')
   end
   
   def api_chart_shop_totals
@@ -345,6 +353,44 @@ class Api::Km < Km
     }.call
   end
   
+  def delivery_average_duration
+    @delivery_average_duration ||= ->{
+      deliveries = Api::Delivery.api_duration_by_km(self.id)
+      delivery_count = Api::Delivery.api_count_by_km(self.id)[0][:num]
+      sum = 0
+      deliveries.each do |el|
+        minutes = el.delivery_duration
+        minutes = minutes / 60
+        sum += minutes
+      end
+      result = sum / delivery_count
+      "#{result} min"
+    }.call
+  end
+  
+  def disruption_average
+    @disruption_average ||= ->{
+      disruptions = Api::TrafficDisruption.count_by_km(self.id)[0][:num]
+      disruptions / WeekHours
+    }.call
+  end
+  
+  def top_vehicle_types
+    @top_vehicle_types ||= ->{
+      totals = Api::TrafficCount.api_top_vehicle_usage_by_km(self.id)
+      totals.join(', ')
+    }.call
+  end
+  
+  def top_disruption_type
+    @top_disruption_type ||= ->{
+      map = Api::TrafficDisruption.api_top_sources(self.id).map do |disruption|
+        Api::TrafficDisruption::Source::List[disruption.source][:name]
+      end
+      map.join(', ')
+    }.call
+  end
+  
   def self.api_shop_inventory(kms)
     result = { series: [], drilldown: [] }
     Api::ShopTotal.json_display = Api::ShopTotal::Json::Chart
@@ -352,7 +398,7 @@ class Api::Km < Km
       result[:series] << {
         name: km.name,
         y: km.shops_count,
-        drilldown: km.name.downcase
+        drilldown: "#{km.name.downcase}_#{km.id}"
       }
       result[:drilldown] << Api::ShopTotal.api_stats_inventory_chart(km)
     end
@@ -388,7 +434,21 @@ class Api::Km < Km
     result = { meters: {}, bays: {}, kms: kms }
     result[:meters] = self.api_parking_lengths(kms)
     result[:bays] = Api::Street.api_bays_distribution(kms)
-    Api::Km.json_display = Api::Km::Json::Obstruction    
+    Api::Km.json_display = Api::Km::Json::Obstruction   
+    result
+  end
+  
+  def self.api_deliveries(kms)
+    result = { series: [], drilldown: [] }
+    kms.each do |km|
+      result[:series] << {
+        name: km.name,
+        y: km.deliveries_count,
+        drilldown: "#{km.name.downcase}_#{km.id}"
+      }
+      result[:drilldown] << Api::Delivery.api_top_vehicles_stats(km)
+    end
+    Api::Km.json_display = Api::Km::Json::Obstruction
     result
   end
   

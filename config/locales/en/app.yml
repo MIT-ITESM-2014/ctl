@@ -33,7 +33,7 @@ en:
           actions:
             back_btn: 'Back'
         fields:
-          population: 
+          population:
             title: 'Population'
             units: 'millions'
           area: 
@@ -70,7 +70,7 @@ en:
               content: 'Traffic count sample data describes the flow of vehicles within a focus street of the square kilometer.'
             traffic_disruptions:
               title: 'Disruptions'
-              content: 'Describes disruptions in the traffic flow by both freight vehicles and other sources, including a measure of the severity.'
+              content: 'Describes obstructions in the traffic flow by both freight vehicles and other sources, including a measure of the severity.'
       compare:
         panel:
           panel:
@@ -112,6 +112,18 @@ en:
               credits: 'Chart depicts information about deliveries during data collection process for a week of observation'
               x_axis: 'Hour'
               y_axis: 'Km2'
+          peak_delivery:
+            chart: 
+              title: 'Deliveries'
+              credits: 'Chart depicts information about deliveries during data collection process for a week of observation'
+              y_axis: 'Average Number of Deliveries'
+              x_axis: 'Km2'
+          deliveries:
+            chart:
+              title: 'Deliveries'
+              subtitle: 'Number of Observed Deliveries and Top 3 Delivery Vehicles per Km2'
+              credits: 'Chart depicts total number of deliveries during a week of data collection process'
+              y_axis: 'Number of Deliveries'
           deliveries_disruptions:
             chart:
               title: 'Percentage of Deliveries That Caused Obstruction'
@@ -205,9 +217,11 @@ en:
             separator: 'Segment Analysis'
           speed:
             title: 'Speed'
+            units: 'km/h'
           deliveries:
             title: 'Deliveries'
             units: 'per hour'
+            second_units: 'peak hour'
             chart:
               y_label: 'Delivery time'
             fields:
@@ -236,13 +250,13 @@ en:
                 motorbikes: 'Motorbikes'
                 pedestrians: 'Pedestrians'
           traffic_disruptions:
-            title: 'Disruption'
+            title: 'Obstruction'
             units: 'per hour'
             chart:
               y_label: 'Duration (Minutes)'
               categories:
                 deliveries: 'Deliveries'
-                disruptions: 'Disruptions'
+                disruptions: 'Obstructions'
             fields:
               source_name: 'Source'
               duration: 'Duration'
