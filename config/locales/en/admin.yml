@@ -91,6 +91,7 @@ en:
           fields:
             name: 'Name'
             gini: 'Gini Index'
+            abbreviation: 'Abbreviation(2 letter)'
             city_count: 'City Count'
             image: 'Image'
           actions:
