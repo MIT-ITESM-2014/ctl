@@ -38,6 +38,10 @@
       &.split_two{
         height: 225px;
       }
+      &.no_split{
+        width: 250px;
+        height: 225px;
+      }
       @include link('a#compare_panel_stats_btn'){
         display: block;
         text-align: center;

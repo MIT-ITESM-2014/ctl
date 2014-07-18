@@ -46,8 +46,12 @@
         }else if(length >= 3){
           this.setFourScreen();
         }else{
-          // Normal render
+          this.setSingleScreen();
         }
+      },
+      setSingleScreen: function(){
+        var map = this.kms;
+        map[0].addClass('no_split');
       },
       setSplitScreen: function(){
         var map = this.kms;
@@ -70,8 +74,7 @@
       abort: function(){
         if(this.req != null) this.req.abort();
       },
-      ready: function(){
-      }
+      ready: function(){}
     });
     app.compare.init();
   });

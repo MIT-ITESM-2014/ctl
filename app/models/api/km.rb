@@ -423,9 +423,8 @@ class Api::Km < Km
   def self.api_lanes(kms)
     result = { one_way: [], two_way: [], kms: kms }
     kms.each do |km|
-      # TODO get from field
-      result[:one_way] << 10
-      result[:two_way] << 30
+      result[:one_way] << km.one_way_streets
+      result[:two_way] << km.two_way_streets
     end
     result
   end

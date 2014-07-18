@@ -96,6 +96,10 @@
             this.container = $('<div id="compare_panel"></div>');
             if(this.view.kms.length == 2){
               this.container.addClass('split_two');
+            }else if(this.view.kms.length == 1){
+              this.container.addClass('no_split');
+            }else{
+              this.container.addClass('split_four');
             }
             this.initContent();
             this.initStatBtn();
@@ -128,7 +132,6 @@
               },
               toggleBtnOnClick: function(){
                 this.parent.hide();
-                //this.parent.content.hide();
               }
             });
             this.header.init();
@@ -233,6 +236,13 @@
                     this.initLoading();
                     this.initUffUcf();
                   },
+                  setData: function(container, value){
+                    if(value == null){
+                      container.html('-');
+                    }else{
+                      container.html(value);
+                    }
+                  },
                   initShops: function(){
                     var el = {};
                     $.extend(el, {
@@ -277,7 +287,7 @@
                       initData: function(){
                         this.getData();
                         var span = $('<div class="compare_panel_content_data"></div>');
-                        span.html(this.shops);
+                        this.parent.setData(span, this.shops);
                         span.appendTo(this.container);
                       },
                       getData: function(){
@@ -407,8 +417,9 @@
                   },
                   getDataBlock: function(data, label){
                     var container = $('<div class="compare_panel_content_datablock"></div>');
-                    var data_div = $('<div class="compare_panel_content_datablock_data">' + data + '</div>');
+                    var data_div = $('<div class="compare_panel_content_datablock_data"></div>');
                     var label_div = $('<div class="compare_panel_content_datablock_label">' + label + '</div>');
+                    this.setData(data_div, data);
                     data_div.appendTo(container);
                     label_div.appendTo(container);
                     return container;
