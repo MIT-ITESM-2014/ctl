@@ -194,7 +194,7 @@ class Api::Km < Km
   scope :filter_base, ->{ select('kms.id, kms.name') }
   scope :filter_by_country_slug, ->(slug){ where('countries.slug = ?', slug) }
   scope :filter_by_city_slug, ->(slug){ where('cities.slug = ?', slug) }
-  scope :api_base, ->{ select('kms.id, kms.slug, kms.city_id, kms.name, kms.description, kms.traffic_counts_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_delivery_hour, kms.peak_traffic, kms.max_deliveries, kms.lat, kms.lng, kms.street_lat, kms.street_lng, kms.speed, kms.uff, kms.ucf, kms.area_type').with_city.with_city_slug.with_country }
+  scope :api_base, ->{ select('kms.id, kms.slug, kms.city_id, kms.name, kms.description, kms.traffic_counts_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_delivery_hour, kms.peak_traffic, kms.max_deliveries, kms.lat, kms.lng, kms.street_lat, kms.street_lng, kms.speed, kms.uff, kms.ucf, kms.area_type, kms.one_way_streets, kms.two_way_streets').with_city.with_city_slug.with_country }
   scope :list_base, ->{ select('kms.id, kms.slug, kms.name, kms.description').with_city.with_city_slug.with_country }
   scope :with_city_slug, ->{ select('cities.slug as city_slug, kms.city_id') }
   scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
@@ -363,7 +363,11 @@ class Api::Km < Km
         minutes = minutes / 60
         sum += minutes
       end
-      result = sum / delivery_count
+      unless delivery_count == 0
+        result = sum / delivery_count
+      else
+        result = 0
+      end
       "#{result} min"
     }.call
   end
