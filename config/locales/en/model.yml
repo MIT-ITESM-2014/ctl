@@ -64,7 +64,7 @@ en:
               deliveries_peak_hour: 'Average Deliveries per Hour'
               delivery_hour: 'Peak Delivery Hour'
               delivery_average_duration: 'Average Deliveries Duration'
-              top_delivery_type: 'Top 3 Delivery Vehicle'
+              top_delivery_type: 'Top 3 Delivery Vehicles'
       user:
         perm:
           users: 'Users'
