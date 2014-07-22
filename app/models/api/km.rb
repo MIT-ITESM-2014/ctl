@@ -10,7 +10,7 @@ class Api::Km < Km
     }
     Show = {
       only: [:id, :name, :description, :shops_count, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_disruptions, :peak_traffic, :max_deliveries, :lat, :lng, :street_lat, :street_lng, :ucf, :uff, :speed],
-      methods: [:full_name, :full_slug, :utc_offset, :s_peak_delivery_hour]
+      methods: [:full_name, :full_slug, :utc_offset, :s_peak_delivery_hour, :disruption_average]
     }
     Stats = {
       only: [:id, :name, :description, :shops_count, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_disruptions, :peak_traffic, :max_deliveries, :lat, :lng, :street_lat, :street_lng, :ucf, :uff, :speed, :area_type],
