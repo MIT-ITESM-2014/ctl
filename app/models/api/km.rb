@@ -122,11 +122,11 @@ class Api::Km < Km
             method: :uff
           },
           Fields::PublicBays => {
-            name: I18n.t("#{LBase}.fields.public_bays"),
+            name: I18n.t("#{LBase}.fields.public_meters"),
             method: :public_meter_length
           },
           Fields::PrivateBays => {
-            name: I18n.t("#{LBase}.fields.private_bays"),
+            name: I18n.t("#{LBase}.fields.public_meters"),
             method: :dedicated_meter_length
           },
           Fields::OneWayStreets => {
