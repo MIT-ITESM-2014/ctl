@@ -21,7 +21,7 @@ class Country < ActiveRecord::FmxBase
   validates :name, length: { in: 2..100 }, uniqueness: true
   validates :slug, uniqueness: true, allow_nil: true
   validates :gini, length: { in: 2..100 },  allow_nil: true # added 2014
-  #validates :abbreviation, length: { in: 1..10 }, allow_nil: true # added 2014
+  validates :abbreviation, length: { in: 1..10 }, allow_blank: true # added 2014
   
   def active_cities
     @active_cities ||= self.cities.filter_active

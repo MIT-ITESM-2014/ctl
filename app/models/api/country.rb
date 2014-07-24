@@ -4,14 +4,14 @@ class Api::Country < Country
     Default = {}
     List = {}
     Map = {
-      only: [:id, :name, :slug],
+      only: [:id, :name, :slug, :abbreviation],
       methods: [:map_cities]
     }
   end
   
   scope :list, ->{ select('DISTINCT(countries.id), countries.name').with_cities.filter_active_cities.ascending }
   scope :api_base, ->{ base.with_cities.filter_active_cities }
-  scope :api_map_base, ->{ select('DISTINCT(countries.id), countries.name, countries.slug') }
+  scope :api_map_base, ->{ select('DISTINCT(countries.id), countries.name, countries.slug, countries.abbreviation') }
   
   def self.json_display
     @@json_display ||= Json::Default

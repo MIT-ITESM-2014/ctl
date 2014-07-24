@@ -1,5 +1,7 @@
 class Admin::CountriesController < Admin::AdminController
   
+  SHOW = 20
+  
   before_filter :assert_ajax_protected, except: [:action, :form_action]
   before_filter :assert_list, only: [:index, :list]
   before_filter :assert_add, only: [:new, :create]

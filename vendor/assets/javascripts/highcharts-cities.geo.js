@@ -3453,8 +3453,8 @@
       "city": "Kota Kinabalu"
     },
     "beijing": {
-      "lat": 39.9,
-      "lon": 116.4,
+      "lat": 1250,
+      "lon": 1295,
       "wikipedia": "Beijing",
       "city": "Beijing"
     },

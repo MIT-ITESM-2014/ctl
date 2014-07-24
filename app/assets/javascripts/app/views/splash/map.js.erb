@@ -88,24 +88,35 @@
       render: function(){
         var _self = this;
         var data = this.getData();
+        this.hideBtn();
+        var colors = Highcharts.getOptions().colors;
         this.container.highcharts('Map',
           $.extend({
             chart: {
+              zoomType: 'xy',
               events: {
                 drilldown: function(e){
                   _self.drilldown(e, this);
                 }
               }
             },
-            title: '',
             tooltip: {
               formatter: function(){
                 return this.point.getTooltip();
               }
             },
+            colorAxis: {
+              min: 0,
+              stops: [
+                [0, colors[0]],
+                [1, colors[1]],
+                [2, colors[2]],
+                [3, colors[3]]
+              ]
+            },
             series: [{
-              data: data,
-              valueRanges: this.config.valueRanges
+              data: data
+              //valueRanges: this.config.valueRanges
             }]
           }, this.config.opts)
         );
@@ -122,7 +133,6 @@
               config: this.config.drilldown,
               obj: null,
               country: null,
-              city: null,
               url: null,
               key: null,
               container: null,
@@ -130,9 +140,7 @@
               init: function(){
                 this.initObj();
                 this.initCountry();
-                this.initUrl();
-                this.initContainer();
-                this.initData();
+                this.drilldown();
               },
               initObj: function(){
                 this.obj = this.event.point;
@@ -140,16 +148,23 @@
               initCountry: function(){
                 this.country = this.obj.country;
               },
+              drilldown: function(){
+                //if(this.country.map_cities.length){
+                  this.initUrl();
+                  this.initContainer();
+                  this.initData();                  
+                //}
+              },
               initUrl: function(){
-                var key = this.obj.key;
-                if(key.length < 3){
+                var key = this.country.abbreviation;
+                if(key != null && key.length > 0 && key.length < 3){
 				          var s = 'countries';
-				          s += '/' + this.obj.key;
-				          s += '/' + this.obj.key;
+				          s += '/' + key;
+				          s += '/' + key;
 				          s += '-all';
 				          this.key = s
 				          s += '.js';
-				          this.url = this.config.url + s;                  
+				          this.url = this.config.url + s;                 
                 }
               },
               initContainer: function(){
@@ -184,7 +199,7 @@
 				          data: data,
 				          dataLabels: {
 				            enabled: true,
-				            format: '{point.properties.postal-code}'
+				            format: '{point.properties.name}'
 				          }
 				        };
                 return series;
@@ -387,7 +402,7 @@
 				                padding: '18px'
 				              },
 				              formatter: function(){
-				                return this.point.getTooltip();
+				                return this.point.getTooltip ? this.point.getTooltip() : false;
 				              }
 				            },
                     series: series
@@ -424,6 +439,7 @@
 					country: null,
 					y: null,
 					name: null,
+					value: null,
 					drilldown: null,
 					_tooltip: null,
 					init: function(){
@@ -460,6 +476,7 @@
 					},
 					initY: function(){
 						this.y = this.country.map_cities.length;
+						this.value = this.y;
 					}
 				});
 				element.init();
