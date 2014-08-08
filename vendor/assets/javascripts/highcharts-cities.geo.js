@@ -266,8 +266,8 @@
       "city": "Monterrey"
     },
     "mexicocity": {
-      "lat": 19.4,
-      "lon": -99.117,
+      "lat": 1034,
+      "lon": 992,
       "wikipedia": "Mexico_City",
       "city": "Mexico City"
     },
@@ -643,9 +643,15 @@
       "wikipedia": "Jersey_City,_New_Jersey",
       "city": "Jersey City"
     },
+    "bogota": {
+      "lat": 1000,
+      "lon": 500,
+      "wikipedia": "Bogot%C3%A1",
+      "city": "Bogot%C3%A1"
+    },
     "bogot%c3%a1": {
-      "lat": 4.6,
-      "lon": -74.067,
+      "lat": 1000,
+      "lon": 1000,
       "wikipedia": "Bogot%C3%A1",
       "city": "Bogot%C3%A1"
     },
@@ -752,8 +758,8 @@
       "city": "Punta Arenas"
     },
     "santiago": {
-      "lat": -33.45,
-      "lon": -70.667,
+      "lat": 150,
+      "lon": 1200,
       "wikipedia": "Santiago,_Chile",
       "city": "Santiago"
     },
@@ -1124,8 +1130,8 @@
       "city": "Campinas"
     },
     "s%c3%a3opaulo": {
-      "lat": -23.55,
-      "lon": -46.633,
+      "lat": 1000,
+      "lon": 1000,
       "wikipedia": "S%C3%A3o_Paulo",
       "city": "S%C3%A3o Paulo"
     },
@@ -1419,8 +1425,8 @@
       "city": "Abidjan"
     },
     "madrid": {
-      "lat": 40.4,
-      "lon": -3.683,
+      "lat": 730,
+      "lon": 1250,
       "wikipedia": "Madrid",
       "city": "Madrid"
     },
@@ -3159,8 +3165,8 @@
       "city": "Bratsk"
     },
     "kualalumpur": {
-      "lat": 3.133,
-      "lon": 101.683,
+      "lat": 470,
+      "lon": 920,
       "wikipedia": "Kuala_Lumpur",
       "city": "Kuala Lumpur"
     },
