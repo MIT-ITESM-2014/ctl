@@ -19,6 +19,10 @@ class Api::Km < Km
     Obstruction = {
       only: [:id, :name]
     }
+    Assigned = {
+      only: [:id, :name, :comments],
+      methods: [:location]
+    }
   end
   
   module Categories
@@ -206,6 +210,29 @@ class Api::Km < Km
   
   def self.json_display=(val)
     @@json_display = val
+  end
+  
+  def self.app_find_by_id(id)
+    self.api_base.select('kms.comments').with_city.with_country.filter_by_id(id).first
+  end
+  
+  def self.app_data(id)
+    @data ||= ->{
+      km = self.filter_base.filter_by_id(id).first 
+      { blocks: km.app_blocks, streets: km.app_streets } 
+    }.call
+  end
+  
+  def app_blocks
+    Api::Block.app_find_by_km(self.id)
+  end
+  
+  def app_streets
+    Api::Street.app_find_by_km(self.id)
+  end
+  
+  def location
+    @location ||= "#{self[:city_name]}, #{self[:country_name]}"
   end
   
   def full_slug

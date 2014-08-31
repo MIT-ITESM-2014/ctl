@@ -12,6 +12,7 @@ class Api::Street < Street
   scope :api_map_base, ->{ select('streets.research_id, streets.public_meter_length, streets.dedicated_meter_length, streets.lat1, streets.lng1, streets.lat2, streets.lng2').with_location }
   scope :count_public_bays_by_km, ->(km){ base_count.filter_by_km(km).with_public_data }
   scope :count_private_bays_by_km, ->(km){ base_count.filter_by_km(km).with_private_data }
+  scope :app_base, ->{ select('streets.id, streets.km_id, streets.block_id, streets.research_id') }
   
   def self.json_display
     @@json_display ||= Json::Default
@@ -19,6 +20,10 @@ class Api::Street < Street
   
   def self.json_display=(val)
     @@json_display = val
+  end
+  
+  def self.app_find_by_km(km_id)
+    self.app_base.filter_by_km(km_id)
   end
   
   def as_json(opts = {})

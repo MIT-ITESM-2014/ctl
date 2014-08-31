@@ -1,7 +1,21 @@
 class Api::KmsController < Api::ApiController
   
+  before_filter :assert_protected, only: [:assigned, :data]
   before_filter :assert_post, only: [:show]
   before_filter :assert_kms, only:[:lanes, :parking, :deliveries]
+  
+  # POST /api/kms/assigned
+  def assigned
+    id = self.app_session.assigned_km.km_id
+    Api::Km.json_display = Api::Km::Json::Assigned
+    render json: { contents: self.cls.app_find_by_id(id) }
+  end
+  
+  # POST /api/kms/data
+  def data
+    id = self.app_session.assigned_km.km_id
+    render json: { contents: self.cls.app_data(id) }
+  end
   
   # POST /api/kms/show
   def show
@@ -51,6 +65,6 @@ class Api::KmsController < Api::ApiController
  
   def get_api_km(id)
     Api::Km.find_by_id(id)
-  end   
+  end
 
 end

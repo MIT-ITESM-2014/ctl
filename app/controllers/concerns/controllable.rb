@@ -85,6 +85,10 @@ module Controllable
       render_403 and return
     end 
   end
+  
+  def render_401
+    render_error(:unauthorized, "401 Unauthorized")
+  end
 
   def render_403
     render_error(:forbidden, "403 Forbidden")
