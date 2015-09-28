@@ -2,7 +2,7 @@
   $(function(){
     /**
       FIXME Change drilldown simulation to highmaps drilldown functionality.
-      Highmaps v1.0.2 + drilldown.js module unable to solve 
+      Highmaps v1.0.2 + drilldown.js module unable to solve
       multiple mapData + mappoint data render problem on drilldown
     */
     app.splash.map = {};
@@ -149,14 +149,13 @@
                 this.country = this.obj.country;
               },
               drilldown: function(){
-                //if(this.country.map_cities.length){
-                  this.initUrl();
-                  this.initContainer();
-                  this.initData();                  
-                //}
+                this.initUrl();
+                this.initContainer();
+                this.initData();
               },
               initUrl: function(){
-                var key = this.country.abbreviation;
+                //var key = this.country.abbreviation;
+                var key = 'gb'
                 if(key != null && key.length > 0 && key.length < 3){
 				          var s = 'countries';
 				          s += '/' + key;
@@ -164,7 +163,7 @@
 				          s += '-all';
 				          this.key = s
 				          s += '.js';
-				          this.url = this.config.url + s;                 
+				          this.url = this.config.url + s;
                 }
               },
               initContainer: function(){
@@ -180,23 +179,25 @@
                 if(this.url != null){
                   var _self = this;
                   this.loading();
+                  console.log('get script', this.url);
                   $.getScript(this.url, function(){
                     _self.success();
                   });
                 }
               },
 				      getData: function(){
+                //TODO review
 				        var hc = Highcharts;
-				        var geojson = hc.maps[this.key];
+                var geojson = hc.maps[this.key];
                 var data = hc.geojson(geojson, 'map');
-				        return data;
+				        return geojson;
 				      },
 				      getDataSeries: function(){
 				        var data = this.getData();
                 var series = {
 				          name: this.country.name,
-				          type: 'map',
-				          data: data,
+				          //type: 'map',
+				          mapData: data,
 				          dataLabels: {
 				            enabled: true,
 				            format: '{point.properties.name}'
@@ -207,6 +208,7 @@
 				      getCities: function(){
 				        var _self = this;
 				        var hc = Highcharts;
+                var chart = this.container.highcharts();
 				        var cities = {
 				          title: this.country.name,
 				          type: 'FeatureCollection',
@@ -216,18 +218,21 @@
 				          var name = val.name.replace(/[ _-]/g,'').toLowerCase();
 				          var json = $.highcharts_cities[name];
 				          if(json != null){
-				            cities['features'].push(_self.getGeojson(json, val));
+				            cities['features'].push(_self.getGeojson(json, val, chart));
 				          }
 				        });
-				        cities = hc.geojson(cities, 'mappoint');
-				        $.each(cities, function(key, val){
+				        //cities = hc.geojson(cities, 'mappoint');
+                //debugger;
+				        /**$.each(cities, function(key, val){
 				          _self.getElement(val, _self.country, _self.root.format);
-				        });
+				        });*/
+                //debugger;
 				        var series = {
 				          name: 'Cities',
 				          type: 'mappoint',
-				          data: cities,
-				          color: 'black',
+				          data: cities['features'],
+                  //data:
+				          /**color: 'black',
 				          point: {
 				            events: {
 				              click: function(){
@@ -243,8 +248,11 @@
 				            align: 'left',
 				            verticalAlign: 'middle'
 				          },
-				          animation: false
+				          animation: false*/
 				        };
+                //debugger;
+                //debugger;
+                console.log('series!!', series);
 				        return series;
 				      },
 				      getElement: function(val, country, format){
@@ -265,7 +273,7 @@
 				                this.initWrapper();
 				                this.initContainer();
 				                this.initHeader();
-				                this.initData(); 
+				                this.initData();
 				              },
 				              initCity: function(){
 				                this.city = this.point.properties.city;
@@ -321,7 +329,7 @@
 				              initBMIndex: function(){
 				                var data = this.point.format.shortNumber(this.city.big_mac_index);
 				                var bmi = this.getDataField('Big Mac Index(USD)', data);
-				                bmi.appendTo(this.data);				                
+				                bmi.appendTo(this.data);
 				              },
 				              getDataField: function(text, data){
 				                var field = $('<div class="city_tooltip_data_field"></div>');
@@ -366,14 +374,19 @@
 			            height: 260,
 			            params: params,
 			            url: url
-			          });			          
+			          });
 			        },
-				      getGeojson: function(json, val){
-				        var geo = {};
+				      getGeojson: function(json, val, chart){
+				        /**var geo = {};
+                //var tmp = chart.fromLatLonToPoint(json);
+                //{ lat: 51.507222, lon: -0.1275 }
+                debugger;
 				        $.extend(geo, {
 				          geometry: {
 				            type: 'Point',
 				            coordinates: [json.lat, json.lon]
+                    //chart.
+                    //coordinates: [chart.fromLatLonToPoint(json)]
 				          },
 				          properties: {
 				            name: json.city,
@@ -381,7 +394,15 @@
 				          },
 				          type: 'Feature',
 				          id: json.city
-				        });
+				        });*/
+                var geo = [];
+                var el = {};
+                $.extend(el, {
+                  name: 'test',
+                  lat: json.lat,
+                  lon: json.lon
+                });
+                geo.push(el);
 				        return geo;
 				      },
               success: function(){
@@ -389,11 +410,15 @@
                 var data = this.getDataSeries();
                 var cities = this.getCities();
                 var series = [data, cities];
+                //var series = [data];
                 this.chart.destroy();
                 this.container.highcharts('Map',
                   $.extend({
+                    mapNavigation: {
+                      enabled: true
+                    },
                     title: '',
-				            tooltip: {
+				            /**tooltip: {
 				              backgroundColor: '#000000',
 				              borderWidth: 0,
 				              useHTML: true,
@@ -404,10 +429,28 @@
 				              formatter: function(){
 				                return this.point.getTooltip ? this.point.getTooltip() : false;
 				              }
-				            },
+				            },*/
                     series: series
-                  }, this.parent.config.opts)
+                  }, {})
+                  //}, this.parent.config.opts)
                 );
+                /**var tmp = $.extend({
+                  title: '',
+                  tooltip: {
+                    backgroundColor: '#000000',
+                    borderWidth: 0,
+                    useHTML: true,
+                    style: {
+                      color: '#FFFFFF',
+                      padding: '18px'
+                    },
+                    formatter: function(){
+                      return this.point.getTooltip ? this.point.getTooltip() : false;
+                    }
+                  },
+                  series: series
+                }, this.parent.config.opts);*/
+
                 this.showBtn();
                 this.loaded();
               },
