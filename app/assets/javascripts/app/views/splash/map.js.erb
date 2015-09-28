@@ -2,7 +2,7 @@
   $(function(){
     /**
       FIXME Change drilldown simulation to highmaps drilldown functionality.
-      Highmaps v1.0.2 + drilldown.js module unable to solve 
+      Highmaps v1.0.2 + drilldown.js module unable to solve
       multiple mapData + mappoint data render problem on drilldown
     */
     app.splash.map = {};
@@ -152,19 +152,22 @@
                 //if(this.country.map_cities.length){
                   this.initUrl();
                   this.initContainer();
-                  this.initData();                  
+                  this.initData();
                 //}
               },
               initUrl: function(){
                 var key = this.country.abbreviation;
                 if(key != null && key.length > 0 && key.length < 3){
+                  //http://code.highcharts.com/mapdata/1.0.3/countries/us/us-all.js
+                  //http://code.highcharts.com/mapdata/countries/cn/cn-all.js
+                  //http://code.highcharts.com/mapdata/1.0.1/countries/cn/cn-all.js
 				          var s = 'countries';
 				          s += '/' + key;
 				          s += '/' + key;
 				          s += '-all';
-				          this.key = s
+				          this.key = s;
 				          s += '.js';
-				          this.url = this.config.url + s;                 
+				          this.url = this.config.url + '1.0.2/' + s;
                 }
               },
               initContainer: function(){
@@ -265,7 +268,7 @@
 				                this.initWrapper();
 				                this.initContainer();
 				                this.initHeader();
-				                this.initData(); 
+				                this.initData();
 				              },
 				              initCity: function(){
 				                this.city = this.point.properties.city;
@@ -321,7 +324,7 @@
 				              initBMIndex: function(){
 				                var data = this.point.format.shortNumber(this.city.big_mac_index);
 				                var bmi = this.getDataField('Big Mac Index(USD)', data);
-				                bmi.appendTo(this.data);				                
+				                bmi.appendTo(this.data);
 				              },
 				              getDataField: function(text, data){
 				                var field = $('<div class="city_tooltip_data_field"></div>');
@@ -366,7 +369,7 @@
 			            height: 260,
 			            params: params,
 			            url: url
-			          });			          
+			          });
 			        },
 				      getGeojson: function(json, val){
 				        var geo = {};
